@@ -16,6 +16,89 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- 曜日 -->
+    <TextView
+        android:id="@+id/weekday_0"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="日"
+        android:textColor="#f00"
+        android:textSize="15dp"
+        android:layout_marginLeft="5dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/weekday_1"
+        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintHorizontal_chainStyle="spread"/>
+    <TextView
+        android:id="@+id/weekday_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="月"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toEndOf="@+id/weekday_0"
+        app:layout_constraintEnd_toStartOf="@+id/weekday_2"
+        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintHorizontal_chainStyle="spread"/>
+    <TextView
+        android:id="@+id/weekday_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="火"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toEndOf="@+id/weekday_1"
+        app:layout_constraintEnd_toStartOf="@+id/weekday_3"
+        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintHorizontal_chainStyle="spread"/>
+    <TextView
+        android:id="@+id/weekday_3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="水"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toEndOf="@+id/weekday_2"
+        app:layout_constraintEnd_toStartOf="@+id/weekday_4"
+        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintHorizontal_chainStyle="spread"/>
+    <TextView
+        android:id="@+id/weekday_4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="木"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toEndOf="@+id/weekday_3"
+        app:layout_constraintEnd_toStartOf="@+id/weekday_5"
+        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintHorizontal_chainStyle="spread"/>
+    <TextView
+        android:id="@+id/weekday_5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="金"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toEndOf="@+id/weekday_4"
+        app:layout_constraintEnd_toStartOf="@+id/weekday_6"
+        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintHorizontal_chainStyle="spread"/>
+    <TextView
+        android:id="@+id/weekday_6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="土"
+        android:textColor="#00f"
+        android:textSize="15dp"
+        android:layout_marginRight="5dp"
+        android:textAlignment="center"
+        app:layout_constraintStart_toEndOf="@+id/weekday_5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintHorizontal_chainStyle="spread"/>
+
     <!-- 1行目 日付 -->
     <TextView
         android:id="@+id/date0_0"
@@ -26,7 +109,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/date0_1"
-        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintTop_toBottomOf="@+id/weekday_0"
         app:layout_constraintHorizontal_chainStyle="spread"/>
     <TextView
         android:id="@+id/date0_1"
@@ -36,7 +119,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/date0_0"
         app:layout_constraintEnd_toStartOf="@+id/date0_2"
-        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintTop_toBottomOf="@+id/weekday_1"
         app:layout_constraintHorizontal_chainStyle="spread"/>
     <TextView
         android:id="@+id/date0_2"
@@ -46,7 +129,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/date0_1"
         app:layout_constraintEnd_toStartOf="@+id/date0_3"
-        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintTop_toBottomOf="@+id/weekday_2"
         app:layout_constraintHorizontal_chainStyle="spread"/>
     <TextView
         android:id="@+id/date0_3"
@@ -56,7 +139,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/date0_2"
         app:layout_constraintEnd_toStartOf="@+id/date0_4"
-        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintTop_toBottomOf="@+id/weekday_3"
         app:layout_constraintHorizontal_chainStyle="spread"/>
     <TextView
         android:id="@+id/date0_4"
@@ -66,7 +149,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/date0_3"
         app:layout_constraintEnd_toStartOf="@+id/date0_5"
-        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintTop_toBottomOf="@+id/weekday_4"
         app:layout_constraintHorizontal_chainStyle="spread"/>
     <TextView
         android:id="@+id/date0_5"
@@ -76,7 +159,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/date0_4"
         app:layout_constraintEnd_toStartOf="@+id/date0_6"
-        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintTop_toBottomOf="@+id/weekday_5"
         app:layout_constraintHorizontal_chainStyle="spread"/>
     <TextView
         android:id="@+id/date0_6"
@@ -87,7 +170,7 @@
         android:textAlignment="center"
         app:layout_constraintStart_toEndOf="@+id/date0_5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/month"
+        app:layout_constraintTop_toBottomOf="@+id/weekday_6"
         app:layout_constraintHorizontal_chainStyle="spread"/>
 
     <!-- 1行目 ボタン -->
