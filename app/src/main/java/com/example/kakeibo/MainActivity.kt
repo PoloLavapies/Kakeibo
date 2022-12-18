@@ -30,9 +30,7 @@ class MainActivity : AppCompatActivity() {
         // 表の生成
         val dateList: List<Int> = getDateList()
 
-        // TODO 元に戻す
-        for (i in 0 until 1) {
-        //for (i in 0 until dateList.size / 7) {
+        for (i in 0 until dateList.size / 7) {
             for (j in 0..6) {
                 val textViewId = resources.getIdentifier("date${i}_${j}", "id", packageName)
                 val date: TextView = findViewById(textViewId)
@@ -40,9 +38,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // TODO 元に戻す
-        for (i in 0 until 1) {
-            //for (i in 0 until dateList.size / 7) {
+        for (i in 0 until dateList.size / 7) {
             for (j in 0..6) {
                 val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
                 val button: Button = findViewById(buttonId)
