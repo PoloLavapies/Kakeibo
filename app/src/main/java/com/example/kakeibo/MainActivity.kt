@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             for (j in 0..6) {
                 val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
                 val button: Button = findViewById(buttonId)
-                //button.text = dateList.get(i * 7 + j).toString()
+                button.text = "10050"
             }
         }
     }
