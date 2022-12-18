@@ -30,19 +30,25 @@ class MainActivity : AppCompatActivity() {
         // 表の生成
         val dateList: List<Int> = getDateList()
 
+        var thisMonthFlag: Boolean = false
         for (i in 0 until dateList.size / 7) {
             for (j in 0..6) {
-                val textViewId = resources.getIdentifier("date${i}_${j}", "id", packageName)
-                val date: TextView = findViewById(textViewId)
-                date.text = dateList.get(i * 7 + j).toString()
-            }
-        }
+                val date = dateList.get(i * 7 + j)
+                if (date == 1) {
+                    thisMonthFlag = !thisMonthFlag
+                }
 
-        for (i in 0 until dateList.size / 7) {
-            for (j in 0..6) {
-                val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
-                val button: Button = findViewById(buttonId)
-                button.text = getSpentMoneyText()
+                val textViewId = resources.getIdentifier("date${i}_${j}", "id", packageName)
+                val dateView: TextView = findViewById(textViewId)
+                dateView.text = dateList.get(i * 7 + j).toString()
+
+                if (thisMonthFlag) {
+                    val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
+                    val button: Button = findViewById(buttonId)
+                    button.text = getSpentMoneyText()
+                } else {
+                    dateView.setTextColor(Color.parseColor("lightgray"))
+                }
             }
         }
     }
