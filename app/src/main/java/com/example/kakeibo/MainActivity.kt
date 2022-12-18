@@ -1,13 +1,17 @@
 package com.example.kakeibo
 
+import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.SpannedString
 import android.widget.Button
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -36,16 +40,15 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // そこまでやったら、一旦git commit push 洗い物
-        /*val table: TableLayout = findViewById(R.id.table)
-        for (i in 0 until dateList.size / 7) {
-            var tableRow = TableRow(this)
-            var dateTextViewList: List<TextView> = arrayListOf()
+        // TODO 元に戻す
+        for (i in 0 until 1) {
+            //for (i in 0 until dateList.size / 7) {
             for (j in 0..6) {
-                tableRow.addView(createDateTextView(dateList.get(i * 7 + j)))
+                val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
+                val button: Button = findViewById(buttonId)
+                //button.text = dateList.get(i * 7 + j).toString()
             }
-            table.addView(tableRow)
-        }*/
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -77,15 +80,14 @@ class MainActivity : AppCompatActivity() {
         return dateList
     }
 
-    private fun createDateTextView(date: Int): TextView {
-        return TextView(this).also {
-            it.text = date.toString()
+    /*private fun getSpentMoneyText(): SpannedString {
+        val sampleLabel = "Sample Text"
+        val colorRange = sampleLabel.rangeOfIndex("Text")
+        return buildSpannedString {
+            append(sampleLabel.subSequence(0, colorRange.first))
+            color(Color.RED) {
+                append(sampleLabel.subSequence(colorRange))
+            }
         }
-    }
-
-    private fun createButton(date: LocalDate): Button {
-        return Button(this).also {
-            it.text = date.dayOfMonth.toString()
-        }
-    }
+    }*/
 }
