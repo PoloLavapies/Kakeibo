@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             for (j in 0..6) {
                 val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
                 val button: Button = findViewById(buttonId)
-                button.text = "10050"
+                button.text = getSpentMoneyText()
             }
         }
     }
@@ -80,14 +80,15 @@ class MainActivity : AppCompatActivity() {
         return dateList
     }
 
-    /*private fun getSpentMoneyText(): SpannedString {
-        val sampleLabel = "Sample Text"
-        val colorRange = sampleLabel.rangeOfIndex("Text")
+    private fun getSpentMoneyText(): SpannedString {
         return buildSpannedString {
-            append(sampleLabel.subSequence(0, colorRange.first))
             color(Color.RED) {
-                append(sampleLabel.subSequence(colorRange))
+                append("2,980円\n")
             }
+            color(Color.BLUE) {
+                append("100,000円\n")
+            }
+            append("+97,020円")
         }
-    }*/
+    }
 }
