@@ -60,14 +60,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // TODO このメソッドを呼び出すところで落ちているので、ログを仕込んでみても良いと思う
-    /*public fun add() {
-        println("あいうえお")
-        //Intent intent = new Intent(getApplication(),SubActivity.class);
-        val intent = Intent(this, AddActivity::class.java)
-        startActivity(intent)
-    }*/
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getMonth(): String {
         val date: LocalDate = LocalDate.now()
