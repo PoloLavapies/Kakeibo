@@ -1,19 +1,20 @@
 package com.example.kakeibo
 
+import android.R
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.SpannedString
 import android.widget.Button
-import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -52,6 +53,14 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    // TODO このメソッドを呼び出すところで落ちているので、ログを仕込んでみても良いと思う
+    /*public fun add() {
+        println("あいうえお")
+        //Intent intent = new Intent(getApplication(),SubActivity.class);
+        val intent = Intent(this, AddActivity::class.java)
+        startActivity(intent)
+    }*/
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getMonth(): String {
