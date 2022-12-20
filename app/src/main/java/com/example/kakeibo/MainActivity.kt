@@ -1,11 +1,12 @@
 package com.example.kakeibo
 
-import android.R
 import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannedString
+import android.view.View
+import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
@@ -14,7 +15,6 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-
 
 class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -51,6 +51,12 @@ class MainActivity : AppCompatActivity() {
                     dateView.setTextColor(Color.parseColor("lightgray"))
                 }
             }
+        }
+
+        val addButton = findViewById<Button>(R.id.add_button)
+        addButton.setOnClickListener {
+            val intent = Intent(application, AddActivity::class.java)
+            startActivity(intent)
         }
     }
 
