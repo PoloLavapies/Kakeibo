@@ -1,10 +1,16 @@
 package com.example.kakeibo
 
+import android.app.ActionBar.LayoutParams
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.InputType
+import android.util.Log
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
 import android.widget.EditText
 import android.widget.TextView
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 class AddActivity : AppCompatActivity() {
@@ -13,6 +19,8 @@ class AddActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add)
 
         var dateEdit = findViewById<EditText>(R.id.date)
+        dateEdit.setInputType(InputType.TYPE_NULL)
+        dateEdit.setText(getDate())
         dateEdit.setOnClickListener() {
             showDatePickerDialog(dateEdit)
         }
@@ -20,23 +28,27 @@ class AddActivity : AppCompatActivity() {
 
     /* 日付ピッカーダイアログを開くためのメソッド */
     fun showDatePickerDialog(dateEdit: EditText) {
-        val calendar: Calendar = Calendar.getInstance()
+        val selectedDate: LocalDate = LocalDate.parse(
+            findViewById<EditText>(R.id.date).text.toString(),
+            DateTimeFormatter.ISO_DATE)
 
         //日付ピッカーダイアログを生成および設定
         DatePickerDialog(
             this,
             //ダイアログのクリックイベント設定
-            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                val currentDate =
-                    Calendar.getInstance().apply { set(year, monthOfYear, dayOfMonth) }
-
-                //選択された日付でEditTextに設定
-                dateEdit.setText(year.toString() + "-" + (monthOfYear+1).toString() + "-" + dayOfMonth.toString())
+            { _, year, month, day ->
+                dateEdit.setText(year.toString() + "-" + (month + 1).toString() + "-" + day.toString())
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
+            // ダイアログを開いたときに選択されている日付 (月のみ0オリジン)
+            selectedDate.year,
+            selectedDate.monthValue - 1,
+            selectedDate.dayOfMonth
         ).apply {
         }.show()
+    }
+
+    private fun getDate(): String {
+        val date: LocalDate = LocalDate.now()
+        return date.format(DateTimeFormatter.ISO_DATE)
     }
 }
