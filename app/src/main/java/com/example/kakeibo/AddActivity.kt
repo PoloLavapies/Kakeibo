@@ -1,17 +1,12 @@
 package com.example.kakeibo
 
-import android.app.ActionBar.LayoutParams
 import android.app.DatePickerDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN
 import android.widget.EditText
-import android.widget.TextView
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 
 class AddActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,7 +14,7 @@ class AddActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add)
 
         var dateEdit = findViewById<EditText>(R.id.date)
-        dateEdit.setInputType(InputType.TYPE_NULL)
+        dateEdit.inputType = InputType.TYPE_NULL
         dateEdit.setText(getDate())
         dateEdit.setOnClickListener() {
             showDatePickerDialog(dateEdit)
