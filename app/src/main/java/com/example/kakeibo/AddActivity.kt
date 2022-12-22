@@ -1,9 +1,11 @@
 package com.example.kakeibo
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
+import android.widget.Button
 import android.widget.EditText
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -18,6 +20,11 @@ class AddActivity : AppCompatActivity() {
         dateEdit.setText(getDate())
         dateEdit.setOnClickListener() {
             showDatePickerDialog(dateEdit)
+        }
+
+        val addButton = findViewById<Button>(R.id.add_button)
+        addButton.setOnClickListener {
+            addData()
         }
     }
 
@@ -45,5 +52,13 @@ class AddActivity : AppCompatActivity() {
     private fun getDate(): String {
         val date: LocalDate = LocalDate.now()
         return date.format(DateTimeFormatter.ISO_DATE)
+    }
+
+    private fun addData() {
+        val dateStr = findViewById<EditText>(R.id.date).text
+        val money = findViewById<EditText>(R.id.money).text
+        val detail = findViewById<EditText>(R.id.detail).text
+        println("日付:${dateStr} 金額:${money} 詳細:${detail}")
+        finish()
     }
 }
