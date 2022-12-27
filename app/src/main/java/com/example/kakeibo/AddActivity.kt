@@ -2,11 +2,13 @@ package com.example.kakeibo
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -22,6 +24,23 @@ class AddActivity : AppCompatActivity() {
             showDatePickerDialog(dateEdit)
         }
 
+        // 分類ボタン押下時の処理
+        val spendingButton = findViewById<TextView>(R.id.button_spending)
+        val incomeButton = findViewById<TextView>(R.id.button_income)
+        incomeButton.setOnClickListener {
+            spendingButton.setTextColor(resources.getColor(R.color.purple_500))
+            spendingButton.background = resources.getDrawable(R.drawable.income_button)
+            incomeButton.setTextColor(resources.getColor(R.color.white));
+            incomeButton.background = resources.getDrawable(R.drawable.spending_button)
+        }
+        spendingButton.setOnClickListener {
+            incomeButton.setTextColor(resources.getColor(R.color.purple_500))
+            incomeButton.background = resources.getDrawable(R.drawable.income_button)
+            spendingButton.setTextColor(resources.getColor(R.color.white));
+            spendingButton.background = resources.getDrawable(R.drawable.spending_button)
+        }
+
+        // 追加ボタン押下時の処理
         val addButton = findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
             addData()
