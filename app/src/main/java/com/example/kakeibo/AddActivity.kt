@@ -9,6 +9,8 @@ import android.text.InputType
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.example.kakeibo.database.KakeiboDatabase
+import com.example.kakeibo.entity.Spending
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -74,10 +76,15 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun addData() {
-        val dateStr = findViewById<EditText>(R.id.date).text
-        val money = findViewById<EditText>(R.id.money).text
-        val detail = findViewById<EditText>(R.id.detail).text
+        val money: Int = findViewById<EditText>(R.id.money).text.toString().toInt()
+        val dateStr = findViewById<EditText>(R.id.date).text.toString()
+        val detail = findViewById<EditText>(R.id.detail).text.toString()
+        val spending = Spending(0, 1, money, dateStr, detail)
         println("日付:${dateStr} 金額:${money} 詳細:${detail}")
+
+        val db = KakeiboDatabase.getInstance(this)
+        db.spendingDao().insert(spending)
+
         finish()
     }
 }
