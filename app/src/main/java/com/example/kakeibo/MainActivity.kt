@@ -28,8 +28,9 @@ class MainActivity : AppCompatActivity() {
         // TODO スワイプなどで遷移した場合に当月以外のデータも表示できるようにする
 
         // 月の表示
-        val month: TextView = findViewById(R.id.month);
-        month.text = getMonth()
+        val today: LocalDate = LocalDate.now()
+        val monthView: TextView = findViewById(R.id.month);
+        monthView.text = getMonthView(today)
 
         // 表の生成
         val dateList: List<Int> = getDateList()
@@ -49,7 +50,7 @@ class MainActivity : AppCompatActivity() {
                 if (thisMonthFlag) {
                     val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
                     val button: Button = findViewById(buttonId)
-                    button.text = getSpentMoneyText()
+                    button.text = getSpentMoneyText(today.withDayOfMonth(date))
                 } else {
                     dateView.setTextColor(Color.parseColor("lightgray"))
                 }
@@ -64,8 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getMonth(): String {
-        val date: LocalDate = LocalDate.now()
+    private fun getMonthView(date: LocalDate): String {
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY年MM月")
         return date.format(formatter)
     }
@@ -92,19 +92,50 @@ class MainActivity : AppCompatActivity() {
         return dateList
     }
 
-    private fun getSpentMoneyText(): SpannedString {
+    // TODO DBとの通信回数を減らしたい (特にcategoriesは同じSQL文を何回も実行している)
+    private fun getSpentMoneyText(date: LocalDate): SpannedString {
+        val dateString: String = date.toString()
+        // TODO 後で消す
+        println("いい" + dateString)
+
         val db = KakeiboDatabase.getInstance(this)
+        // カテゴリ
         val categories: List<Category> = db.categoryDao().getAll()
-        val spendings: List<Spending> = db.spendingDao().getAll()
+        val spendingCategoryIds = mutableListOf<Int>()
+        val incomeCategoryIds = mutableListOf<Int>()
+        for (category in categories) {
+            if (category.isSpending) {
+                spendingCategoryIds.add(category.id)
+            } else {
+                incomeCategoryIds.add(category.id)
+            }
+        }
+
+        var spendings:Int = 0
+        var incomes:Int = 0
+
+        for (spending in db.spendingDao().getByDate(dateString)) {
+            if (spending.categoryId in spendingCategoryIds) {
+                spendings += spending.money
+            } else {
+                incomes += spending.money
+            }
+        }
 
         return buildSpannedString {
             color(Color.RED) {
-                append("2,980円\n")
+                append(spendings.toString() + "円\n")
             }
             color(Color.BLUE) {
-                append("100,000円\n")
+                append(incomes.toString() + "円\n")
             }
-            append("+97,020円")
+            // TODO 変数名は適当 文字数の埋め込みも
+            val diff = incomes - spendings
+            if (diff > 0) {
+                append("+" + diff.toString() + "円")
+            } else {
+                append(diff.toString() + "円")
+            }
         }
     }
 }
