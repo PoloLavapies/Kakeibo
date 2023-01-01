@@ -28,7 +28,7 @@ abstract class KakeiboDatabase : RoomDatabase() {
                         // TODO 調査
                         .allowMainThreadQueries()
                         .addCallback(object : RoomDatabase.Callback() {
-                            // TODO ほかの書き方も調査
+                            // TODO ほかの書き方も調査。動いてはいるがエディターで赤線が引かれているのは気になる
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onCreate(db)
                                 val sql = "INSERT INTO 'category' VALUES " +

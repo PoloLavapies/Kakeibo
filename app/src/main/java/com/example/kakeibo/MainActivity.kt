@@ -20,32 +20,36 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
+    var spendingCategoryIds = mutableListOf<Int>()
+    var incomeCategoryIds = mutableListOf<Int>()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // TODO スワイプなどで遷移した場合に当月以外のデータも表示できるようにする
+        //  Intentを使い、年と月を受け取れるようにするのが良さそう
+        val today: LocalDate = LocalDate.now()
 
         // 月の表示
-        val today: LocalDate = LocalDate.now()
-        val monthView: TextView = findViewById(R.id.month);
-        monthView.text = getMonthView(today)
+        setMonthView(today)
 
         // 表の生成
-        val dateList: List<Int> = getDateList()
+        initCategoryList()
+        val dayList: List<Int> = getDayList(today)
 
         var thisMonthFlag: Boolean = false
-        for (i in 0 until dateList.size / 7) {
+        for (i in 0 until dayList.size / 7) {
             for (j in 0..6) {
-                val date = dateList.get(i * 7 + j)
+                val date = dayList.get(i * 7 + j)
                 if (date == 1) {
                     thisMonthFlag = !thisMonthFlag
                 }
 
                 val textViewId = resources.getIdentifier("date${i}_${j}", "id", packageName)
                 val dateView: TextView = findViewById(textViewId)
-                dateView.text = dateList.get(i * 7 + j).toString()
+                dateView.text = dayList.get(i * 7 + j).toString()
 
                 if (thisMonthFlag) {
                     val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
@@ -65,44 +69,36 @@ class MainActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getMonthView(date: LocalDate): String {
+    private fun setMonthView(date: LocalDate) {
+        val monthView: TextView = findViewById(R.id.month);
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY年MM月")
-        return date.format(formatter)
+        monthView.text = date.format(formatter)
     }
 
-    // 3月分のButtonのリストを返す (日曜始まり)
-    private fun getDateList(): List<Int> {
-        val today: LocalDate = LocalDate.now()
-        val firstDayOfMonth: LocalDate = LocalDate.of(today.year, today.month, 1)
+    // 前後の月を含む、6週分の日のリストを返す (日曜始まり)
+    private fun getDayList(dayOfThisMonth: LocalDate): List<Int> {
+        val firstDayOfMonth: LocalDate = LocalDate.of(dayOfThisMonth.year, dayOfThisMonth.month, 1)
         val lastDayOfMonth: LocalDate = firstDayOfMonth.plusMonths(1).minusDays(1)
 
-        // MONDAYが1
-        var dateList: List<Int> = arrayListOf()
+        var dayList: List<Int> = arrayListOf()
 
         var date: LocalDate = firstDayOfMonth.minusDays((firstDayOfMonth.dayOfWeek.value % 7).toLong())
         while (!date.isAfter(lastDayOfMonth)) {
-            dateList += date.dayOfMonth
+            dayList += date.dayOfMonth
             date = date.plusDays(1)
         }
-        while (dateList.size % 7 != 0) {
-            dateList += date.dayOfMonth
+        while (dayList.size % 7 != 0) {
+            dayList += date.dayOfMonth
             date = date.plusDays(1)
         }
 
-        return dateList
+        return dayList
     }
 
-    // TODO DBとの通信回数を減らしたい (特にcategoriesは同じSQL文を何回も実行している)
-    private fun getSpentMoneyText(date: LocalDate): SpannedString {
-        val dateString: String = date.toString()
-        // TODO 後で消す
-        println("いい" + dateString)
-
+    private fun initCategoryList() {
         val db = KakeiboDatabase.getInstance(this)
-        // カテゴリ
         val categories: List<Category> = db.categoryDao().getAll()
-        val spendingCategoryIds = mutableListOf<Int>()
-        val incomeCategoryIds = mutableListOf<Int>()
+
         for (category in categories) {
             if (category.isSpending) {
                 spendingCategoryIds.add(category.id)
@@ -110,31 +106,38 @@ class MainActivity : AppCompatActivity() {
                 incomeCategoryIds.add(category.id)
             }
         }
+    }
 
-        var spendings:Int = 0
-        var incomes:Int = 0
+    // TODO DBとの通信回数を減らしたい。一度の通信でクラス変数などにデータを格納しておく?
+    private fun getSpentMoneyText(date: LocalDate): SpannedString {
+        val dateString: String = date.toString()
+
+        val db = KakeiboDatabase.getInstance(this)
+
+        // カテゴリ
+        var spendingTotal:Int = 0
+        var incomeTotal:Int = 0
 
         for (spending in db.spendingDao().getByDate(dateString)) {
             if (spending.categoryId in spendingCategoryIds) {
-                spendings += spending.money
+                spendingTotal += spending.money
             } else {
-                incomes += spending.money
+                incomeTotal += spending.money
             }
         }
 
         return buildSpannedString {
             color(Color.RED) {
-                append(spendings.toString() + "円\n")
+                append("${spendingTotal}円\n")
             }
             color(Color.BLUE) {
-                append(incomes.toString() + "円\n")
+                append("${incomeTotal}円\n")
             }
-            // TODO 変数名は適当 文字数の埋め込みも
-            val diff = incomes - spendings
-            if (diff > 0) {
-                append("+" + diff.toString() + "円")
+            val savings = incomeTotal - spendingTotal
+            if (savings > 0) {
+                append("+${savings}円")
             } else {
-                append(diff.toString() + "円")
+                append("${savings}円")
             }
         }
     }
