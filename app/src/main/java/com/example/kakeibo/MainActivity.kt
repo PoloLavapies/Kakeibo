@@ -13,6 +13,9 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import com.example.kakeibo.database.KakeiboDatabase
+import com.example.kakeibo.entity.Category
+import com.example.kakeibo.entity.Spending
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -90,6 +93,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getSpentMoneyText(): SpannedString {
+        val db = KakeiboDatabase.getInstance(this)
+        val categories: List<Category> = db.categoryDao().getAll()
+        val spendings: List<Spending> = db.spendingDao().getAll()
+
         return buildSpannedString {
             color(Color.RED) {
                 append("2,980円\n")

@@ -32,9 +32,9 @@ abstract class KakeiboDatabase : RoomDatabase() {
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onCreate(db)
                                 val sql = "INSERT INTO 'category' VALUES " +
-                                        "(0, 0, '給料')," +
-                                        "(0, 1, 'ごはん')," +
-                                        "(0, 1, 'おやつ');"
+                                        "(null, 0, '給料')," +
+                                        "(null, 1, 'ごはん')," +
+                                        "(null, 1, 'おやつ');"
                                         db.execSQL(sql)
                             }
                         })

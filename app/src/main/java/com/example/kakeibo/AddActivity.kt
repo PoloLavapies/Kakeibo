@@ -80,8 +80,7 @@ class AddActivity : AppCompatActivity() {
         val dateStr = findViewById<EditText>(R.id.date).text.toString()
         val detail = findViewById<EditText>(R.id.detail).text.toString()
         val spending = Spending(0, 1, money, dateStr, detail)
-        println("日付:${dateStr} 金額:${money} 詳細:${detail}")
-
+        
         val db = KakeiboDatabase.getInstance(this)
         db.spendingDao().insert(spending)
 
