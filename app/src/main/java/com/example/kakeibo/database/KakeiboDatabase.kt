@@ -35,7 +35,7 @@ abstract class KakeiboDatabase : RoomDatabase() {
                                         "(null, 0, '給料')," +
                                         "(null, 1, 'ごはん')," +
                                         "(null, 1, 'おやつ');"
-                                        db.execSQL(sql)
+                                db.execSQL(sql)
                             }
                         })
                         .build()

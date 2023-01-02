@@ -85,9 +85,8 @@ class AddActivity : AppCompatActivity() {
         val db = KakeiboDatabase.getInstance(this)
         db.spendingDao().insert(spending)
 
-        // TODO MainActivityで当月以外の画面から遷移した場合の処理を追加
+        // TODO MainActivityの当月以外の画面や別画面から遷移した場合の処理を追加
         val intent = Intent(this,MainActivity::class.java)
-        // TODO 同じアクティビティが二重で開いていないか確認
         startActivity(intent)
         finish()
     }
