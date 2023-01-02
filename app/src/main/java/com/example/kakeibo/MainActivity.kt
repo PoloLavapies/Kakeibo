@@ -15,7 +15,6 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Category
-import com.example.kakeibo.entity.Spending
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

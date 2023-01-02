@@ -60,7 +60,8 @@ class AddActivity : AppCompatActivity() {
             this,
             //ダイアログのクリックイベント設定
             { _, year, month, day ->
-                dateEdit.setText(year.toString() + "-" + (month + 1).toString() + "-" + day.toString())
+                val date: LocalDate = LocalDate.of(year, month + 1, day)
+                dateEdit.setText(date.format(DateTimeFormatter.ISO_DATE))
             },
             // ダイアログを開いたときに選択されている日付 (月のみ0オリジン)
             selectedDate.year,
