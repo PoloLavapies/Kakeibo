@@ -40,11 +40,11 @@ class AddActivity : AppCompatActivity() {
         val categories = db.categoryDao().getAll()
         for (category in categories) {
             if (category.isSpending) {
-                adapterSpending.add(category.category)
+                adapterSpending.add(category.name)
             } else {
-                adapterIncome.add(category.category)
+                adapterIncome.add(category.name)
             }
-            categoryIdMap[category.category] = category.id
+            categoryIdMap[category.name] = category.id
         }
 
         val spinner = findViewById<Spinner>(R.id.category_spinner)
