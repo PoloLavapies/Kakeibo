@@ -35,8 +35,15 @@ abstract class KakeiboDatabase : RoomDatabase() {
                                 val sql = "INSERT INTO 'category' VALUES " +
                                         "(null, 0, '給料')," +
                                         "(null, 0, 'お小遣い')," +
-                                        "(null, 1, 'ごはん')," +
-                                        "(null, 1, 'おやつ');"
+                                        "(null, 0, 'その他')," +
+                                        "(null, 1, '食費')," +
+                                        "(null, 1, '日用品')," +
+                                        "(null, 1, '娯楽')," +
+                                        "(null, 1, '交通費')," +
+                                        "(null, 1, '家賃')," +
+                                        "(null, 1, '光熱費')," +
+                                        "(null, 1, '医療費')," +
+                                        "(null, 1, 'その他');"
                                 db.execSQL(sql)
                             }
                         })
