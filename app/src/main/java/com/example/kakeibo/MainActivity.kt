@@ -54,6 +54,10 @@ class MainActivity : AppCompatActivity() {
                     val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
                     val button: Button = findViewById(buttonId)
                     button.text = getSpentMoneyText(today.withDayOfMonth(date))
+                    button.setOnClickListener {
+                        val intent = Intent(application, DetailActivity::class.java)
+                        startActivity(intent)
+                    }
                 } else {
                     dateView.setTextColor(Color.parseColor("lightgray"))
                 }
