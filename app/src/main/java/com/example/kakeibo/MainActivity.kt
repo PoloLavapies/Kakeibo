@@ -19,8 +19,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
-    var spendingCategoryIds = mutableListOf<Int>()
-    var incomeCategoryIds = mutableListOf<Int>()
+    private val spendingCategoryIds = mutableListOf<Int>()
+    private val incomeCategoryIds = mutableListOf<Int>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
