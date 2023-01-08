@@ -12,6 +12,9 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getAll(): List<Category>
 
+    @Query("SELECT name FROM category WHERE id = :id")
+    fun getCategoryName(id: Int): String
+
     @Query("SELECT * FROM category WHERE is_spending = 'true'")
     fun getAllSpendingCategory(): List<Category>
 
