@@ -19,17 +19,23 @@ class DetailActivity : AppCompatActivity() {
         val spendings: List<Spending> = getSpendingData(date)
         val spendingMapList: MutableList<MutableMap<String, String>> = mutableListOf()
         for (spending: Spending in spendings) {
+            val category: String = getCategoryName(spending.categoryId)
+            val money: String = spending.money.toString()
+            val detail: String = spending.detail
             spendingMapList.add(mutableMapOf(
-                "category" to getCategoryName(spending.categoryId),
-                "money" to spending.money.toString(),
-                "detail" to spending.detail + getCategoryName(spending.categoryId)
+                "money" to "${money}円",
+                "detail" to "分類:${category} 詳細:${detail}円"
             ))
         }
-        val from = arrayOf("category", "money", "detail")
-        val to = intArrayOf(android.R.id.text1, android.R.id.text1, android.R.id.text2)
-        val adapter = SimpleAdapter(this, spendingMapList, android.R.layout.simple_list_item_2, from, to)
+
         val listView: ListView = findViewById(R.id.detail_list)
-        listView.adapter = adapter
+        listView.adapter = SimpleAdapter(
+            this,
+            spendingMapList,
+            R.layout.activity_detail_row,
+            arrayOf("money", "detail"),
+            intArrayOf(R.id.money, R.id.detail)
+        )
     }
 
     private fun getSpendingData(date: String): List<Spending> {
