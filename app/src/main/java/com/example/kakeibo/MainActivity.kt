@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity() {
         var thisMonthFlag: Boolean = false
         for (i in 0 until dayList.size / 7) {
             for (j in 0..6) {
-                val date = dayList.get(i * 7 + j)
-                if (date == 1) {
+                val dayOfMonth = dayList.get(i * 7 + j)
+                if (dayOfMonth == 1) {
                     thisMonthFlag = !thisMonthFlag
                 }
 
@@ -53,9 +53,11 @@ class MainActivity : AppCompatActivity() {
                 if (thisMonthFlag) {
                     val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
                     val button: Button = findViewById(buttonId)
-                    button.text = getSpentMoneyText(today.withDayOfMonth(date))
+                    val date: LocalDate = today.withDayOfMonth(dayOfMonth)
+                    button.text = getSpentMoneyText(date)
                     button.setOnClickListener {
                         val intent = Intent(application, DetailActivity::class.java)
+                        intent.putExtra("date", date.format(DateTimeFormatter.ISO_DATE))
                         startActivity(intent)
                     }
                 } else {
