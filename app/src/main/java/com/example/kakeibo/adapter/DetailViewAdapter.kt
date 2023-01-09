@@ -1,24 +1,22 @@
 package com.example.kakeibo.adapter
 
-import android.app.Activity
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SimpleAdapter
 import android.widget.TextView
+import com.example.kakeibo.DetailActivity
 import com.example.kakeibo.R
-import com.example.kakeibo.helper.DetailActivityHelperInterface
 
 class DetailViewAdapter : SimpleAdapter {
-    private var listner: DetailActivityHelperInterface?
-    private var inflater: LayoutInflater //= null
-    private var list: MutableList<MutableMap<String, Any>> //= mutableListOf()
+    private var activity: DetailActivity? = null
+    private var inflater: LayoutInflater
+    private var list: MutableList<MutableMap<String, Any>>
 
-    constructor(activity: DetailActivityHelperInterface, context: Context, list: MutableList<MutableMap<String, Any>>, layout :Int, from :Array<String>, to :IntArray)
-            : super(context, list, layout, from, to) {
-        this.listner = activity
-        this.inflater = LayoutInflater.from(context)
+    constructor(activity: DetailActivity, list: MutableList<MutableMap<String, Any>>, layout :Int, from :Array<String>, to :IntArray)
+            : super(activity, list, layout, from, to) {
+        this.activity = activity
+        this.inflater = LayoutInflater.from(activity)
         this.list = list
     }
 
@@ -37,8 +35,12 @@ class DetailViewAdapter : SimpleAdapter {
         val button = view.findViewById<TextView>(R.id.delete_button)
         button. setOnClickListener() {
             val spendingId: Int = list[position]["spendingId"] as Int
-            println("押されました" + spendingId.toString())
-            this.listner?.deleteSpendingData(spendingId)
+            // TODO Activity側でDialogを出すように実装
+            this.activity?.deleteSpendingData(spendingId)
+            // TODO 削除を行った場合と行わなかった場合で↑のメソッドが違う値を返すよう実装
+            //  その値に応じて↓を実行するかを決める
+            list.removeAt(position)
+            this.notifyDataSetChanged()
         }
 
         return view

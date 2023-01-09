@@ -6,9 +6,8 @@ import android.widget.ListView
 import com.example.kakeibo.adapter.DetailViewAdapter
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
-import com.example.kakeibo.helper.DetailActivityHelperInterface
 
-class DetailActivity : AppCompatActivity(), DetailActivityHelperInterface {
+class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
@@ -33,7 +32,6 @@ class DetailActivity : AppCompatActivity(), DetailActivityHelperInterface {
         val listView: ListView = findViewById(R.id.detail_list)
         listView.adapter = DetailViewAdapter(
             this,
-            this,
             spendingMapList,
             R.layout.activity_detail_row,
             arrayOf("money", "detail"),
@@ -46,8 +44,7 @@ class DetailActivity : AppCompatActivity(), DetailActivityHelperInterface {
         return db.spendingDao().getByDate(date)
     }
 
-    override fun deleteSpendingData(id: Int) {
-        println("ンゴゴゴq")
+    fun deleteSpendingData(id: Int) {
         val db = KakeiboDatabase.getInstance(this)
         return db.spendingDao().deleteById(id)
     }
