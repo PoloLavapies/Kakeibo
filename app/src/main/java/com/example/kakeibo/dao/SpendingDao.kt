@@ -24,6 +24,6 @@ interface SpendingDao {
     @Update
     fun update(spending: Spending)
 
-    @Delete
-    fun delete(spending: Spending)
+    @Query("DELETE FROM spending WHERE id = :id")
+    fun deleteById(id: Int)
 }
