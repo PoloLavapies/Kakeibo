@@ -28,11 +28,11 @@ class DetailActivity : AppCompatActivity() {
             val money: SpannedString = buildSpannedString {
                 if (isSpending(spending.categoryId)) {
                     color(Color.RED) {
-                        append("-${spending.money}円")
+                        append("-${"%,d".format(spending.money)}円")
                     }
                 } else {
                     color(Color.BLUE) {
-                        append("+${spending.money}円")
+                        append("+${"%,d".format(spending.money)}円")
                     }
                 }
             }

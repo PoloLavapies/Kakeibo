@@ -133,16 +133,16 @@ class MainActivity : AppCompatActivity() {
 
         return buildSpannedString {
             color(Color.RED) {
-                append("${spendingTotal}円\n")
+                append("${"%,d".format(spendingTotal)}円\n")
             }
             color(Color.BLUE) {
-                append("${incomeTotal}円\n")
+                append("${"%,d".format(incomeTotal)}円\n")
             }
             val savings = incomeTotal - spendingTotal
             if (savings > 0) {
-                append("+${savings}円")
+                append("+${"%,d".format(savings)}円")
             } else {
-                append("${savings}円")
+                append("${"%,d".format(savings)}円")
             }
         }
     }
