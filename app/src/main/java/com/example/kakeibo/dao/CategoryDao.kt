@@ -12,14 +12,17 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getAll(): List<Category>
 
-    @Query("SELECT name FROM category WHERE id = :id")
-    fun getCategoryName(id: Int): String
-
     @Query("SELECT * FROM category WHERE is_spending = 'true'")
     fun getAllSpendingCategory(): List<Category>
 
     @Query("SELECT * FROM category WHERE is_spending = 'false'")
     fun getAllIncomeCategory(): List<Category>
+
+    @Query("SELECT name FROM category WHERE id = :id")
+    fun getCategoryName(id: Int): String
+
+    @Query("SELECT is_spending FROM category WHERE id = :id")
+    fun isSpending(id: Int): Boolean
 
     // TODO エラーになるので調査
     /*@Query("SELECT * FROM spending WHERE id = :id")

@@ -2,6 +2,7 @@ package com.example.kakeibo.adapter
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,7 @@ class DetailViewAdapter : SimpleAdapter {
 
         // 金額
         val moneyView = view.findViewById<TextView>(R.id.money)
-        moneyView.text = list[position]["money"].toString()
+        moneyView.text = list[position]["money"] as SpannedString
 
         // 詳細
         val detailView = view.findViewById<TextView>(R.id.detail)

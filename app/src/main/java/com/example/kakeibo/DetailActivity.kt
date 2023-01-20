@@ -1,10 +1,14 @@
 package com.example.kakeibo
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannedString
 import android.widget.Button
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.buildSpannedString
+import androidx.core.text.color
 import com.example.kakeibo.adapter.DetailViewAdapter
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
@@ -21,11 +25,22 @@ class DetailActivity : AppCompatActivity() {
         val spendingMapList: MutableList<MutableMap<String, Any>> = mutableListOf()
         for (spending: Spending in spendings) {
             val category: String = getCategoryName(spending.categoryId)
-            val money: String = spending.money.toString()
+            val money: SpannedString = buildSpannedString {
+                if (isSpending(spending.categoryId)) {
+                    color(Color.RED) {
+                        append("-${spending.money}円")
+                    }
+                } else {
+                    color(Color.BLUE) {
+                        append("+${spending.money}円")
+                    }
+                }
+            }
             // TODO 未記入の場合の表示 「:」で行が切れるのは避けたい
             val detail: String = spending.detail
+
             spendingMapList.add(mutableMapOf(
-                "money" to "${money}円",
+                "money" to money,
                 "detail" to "分類:${category} 詳細:${detail}",
                 // 以下の要素は表示はしない
                 "spendingId" to spending.id
@@ -62,5 +77,10 @@ class DetailActivity : AppCompatActivity() {
     private fun getCategoryName(id: Int): String {
         val db = KakeiboDatabase.getInstance(this)
         return db.categoryDao().getCategoryName(id)
+    }
+
+    private fun isSpending(id: Int): Boolean {
+        val db = KakeiboDatabase.getInstance(this)
+        return db.categoryDao().isSpending(id)
     }
 }
