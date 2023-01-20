@@ -23,14 +23,19 @@ class AddActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add)
 
+        // 日付
         var dateEdit = findViewById<EditText>(R.id.date)
         dateEdit.inputType = InputType.TYPE_NULL
-        dateEdit.setText(getDate())
+        if (intent.getStringExtra("date") != null) {
+            dateEdit.setText(intent.getStringExtra("date").toString())
+        } else {
+            dateEdit.setText(getDate())
+        }
         dateEdit.setOnClickListener() {
             showDatePickerDialog(dateEdit)
         }
 
-        // プルダウンの実装
+        // プルダウンの実装 (分類)
         val adapterSpending: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         adapterSpending.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         val adapterIncome: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)

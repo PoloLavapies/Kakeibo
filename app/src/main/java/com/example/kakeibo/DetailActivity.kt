@@ -1,7 +1,9 @@
 package com.example.kakeibo
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ListView
 import com.example.kakeibo.adapter.DetailViewAdapter
 import com.example.kakeibo.database.KakeiboDatabase
@@ -37,6 +39,13 @@ class DetailActivity : AppCompatActivity() {
             arrayOf("money", "detail"),
             intArrayOf(R.id.money, R.id.detail)
         )
+
+        val addButton = findViewById<Button>(R.id.add_button)
+        addButton.setOnClickListener {
+            val intent = Intent(application, AddActivity::class.java)
+            intent.putExtra("date", date)
+            startActivity(intent)
+        }
     }
 
     private fun getSpendingData(date: String): List<Spending> {
