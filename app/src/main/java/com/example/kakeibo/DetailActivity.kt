@@ -1,13 +1,14 @@
 package com.example.kakeibo
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ListView
+import androidx.appcompat.app.AppCompatActivity
 import com.example.kakeibo.adapter.DetailViewAdapter
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
+
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,5 +1,7 @@
 package com.example.kakeibo.adapter
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,12 +37,17 @@ class DetailViewAdapter : SimpleAdapter {
         val button = view.findViewById<TextView>(R.id.delete_button)
         button. setOnClickListener() {
             val spendingId: Int = list[position]["spendingId"] as Int
-            // TODO Activity側でDialogを出すように実装
-            this.activity?.deleteSpendingData(spendingId)
-            // TODO 削除を行った場合と行わなかった場合で↑のメソッドが違う値を返すよう実装
-            //  その値に応じて↓を実行するかを決める
-            list.removeAt(position)
-            this.notifyDataSetChanged()
+
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this.activity)
+            builder.setTitle("確認")
+                .setMessage("選択されたデータを削除します。")
+                .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
+                    this.activity?.deleteSpendingData(spendingId)
+                    list.removeAt(position)
+                    this.notifyDataSetChanged()
+                })
+                .setNegativeButton("キャンセル", null)
+            builder.create().show()
         }
 
         return view
