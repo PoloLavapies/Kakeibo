@@ -36,12 +36,11 @@ class DetailActivity : AppCompatActivity() {
                     }
                 }
             }
-            // TODO 未記入の場合の表示 「:」で行が切れるのは避けたい
             val detail: String = spending.detail
 
             spendingMapList.add(mutableMapOf(
                 "money" to money,
-                "detail" to "分類:${category} 詳細:${detail}",
+                "detail" to if (detail == "") "分類:${category}" else "分類:${category} 詳細:${detail}",
                 // 以下の要素は表示はしない
                 "spendingId" to spending.id
             ))
