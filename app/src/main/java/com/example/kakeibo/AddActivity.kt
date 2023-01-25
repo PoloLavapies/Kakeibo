@@ -39,7 +39,7 @@ class AddActivity : AppCompatActivity() {
         val adapterSpending: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
         adapterSpending.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         val adapterIncome: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item)
-        adapterSpending.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        adapterIncome.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         val db = KakeiboDatabase.getInstance(this)
         val categories = db.categoryDao().getAll()
@@ -108,6 +108,7 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun addData() {
+        // TODO どちらのSpinnerが表示されているかを調べる処理の追加が必要
         val categoryName: String = findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
 
         // TODO nullが入ることはないはずなので、簡潔な記述に直せるはず
