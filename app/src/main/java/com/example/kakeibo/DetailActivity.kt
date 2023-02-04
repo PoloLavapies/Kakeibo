@@ -4,8 +4,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannedString
+import android.view.View
 import android.widget.Button
 import android.widget.ListView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
@@ -23,6 +25,11 @@ class DetailActivity : AppCompatActivity() {
 
         val spendings: List<Spending> = getSpendingData(date)
         val spendingMapList: MutableList<MutableMap<String, Any>> = mutableListOf()
+
+        if (!spendings.isEmpty()) {
+            findViewById<TextView>(R.id.text_no_data).visibility = View.GONE
+        }
+
         for (spending: Spending in spendings) {
             val category: String = getCategoryName(spending.categoryId)
             val money: SpannedString = buildSpannedString {
