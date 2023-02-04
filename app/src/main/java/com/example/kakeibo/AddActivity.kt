@@ -15,9 +15,10 @@ import com.example.kakeibo.entity.Spending
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 class AddActivity : AppCompatActivity() {
-    private val categoryIdMap = mutableMapOf<String, Int>()
+    // 分類名とIDの対応表 選択されたカテゴリ名からIDを取得するために使用する
+    private val categoryIdMapSpending = mutableMapOf<String, Int>()
+    private val categoryIdMapIncome = mutableMapOf<String, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +47,11 @@ class AddActivity : AppCompatActivity() {
         for (category in categories) {
             if (category.isSpending) {
                 adapterSpending.add(category.name)
+                categoryIdMapSpending[category.name] = category.id
             } else {
                 adapterIncome.add(category.name)
+                categoryIdMapIncome[category.name] = category.id
             }
-            categoryIdMap[category.name] = category.id
         }
 
         val spinner = findViewById<Spinner>(R.id.category_spinner)
@@ -108,16 +110,14 @@ class AddActivity : AppCompatActivity() {
     }
 
     private fun addData() {
-        // TODO どちらのSpinnerが表示されているかを調べる処理の追加が必要
         val categoryName: String = findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
 
-        // TODO nullが入ることはないはずなので、簡潔な記述に直せるはず
-        val categoryIdPossibleNull: Int? = categoryIdMap[categoryName]
-        var categoryId: Int = 0
-        if (categoryIdPossibleNull != null) {
-            categoryId = categoryIdPossibleNull.toInt()
+        // TODO 白色の場合「-1」になるので動きはするが、安全なコードに直したい
+        val categoryId: Int = if (findViewById<TextView>(R.id.button_spending).currentTextColor == -1) {
+            categoryIdMapSpending[categoryName]!!
+        } else {
+            categoryIdMapIncome[categoryName]!!
         }
-
         val money: Int = findViewById<EditText>(R.id.money).text.toString().toInt()
         val dateStr = findViewById<EditText>(R.id.date).text.toString()
         val detail = findViewById<EditText>(R.id.detail).text.toString()
