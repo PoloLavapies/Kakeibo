@@ -14,6 +14,7 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Category
+import com.kal.rackmonthpicker.MonthType
 import com.kal.rackmonthpicker.RackMonthPicker
 import com.kal.rackmonthpicker.listener.DateMonthDialogListener
 import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener
@@ -29,6 +30,16 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val addButton = findViewById<Button>(R.id.add_button)
+        addButton.setOnClickListener {
+            val intent = Intent(application, AddActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
 
         var today: LocalDate = LocalDate.now()
         val year: Int = intent.getIntExtra("year", 0)
@@ -75,12 +86,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
-        val addButton = findViewById<Button>(R.id.add_button)
-        addButton.setOnClickListener {
-            val intent = Intent(application, AddActivity::class.java)
-            startActivity(intent)
-        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -91,24 +96,28 @@ class MainActivity : AppCompatActivity() {
 
         // クリック時の処理
         monthView.setOnClickListener() {
-            showMonthPickerDialog()
+            showMonthPickerDialog(date)
         }
     }
 
-    private fun showMonthPickerDialog() {
+    private fun showMonthPickerDialog(date: LocalDate) {
         RackMonthPicker(this)
             // JAPANESEかも
-            .setLocale(Locale.JAPAN)
-                // TODO
-            //.setSelectedYear(2023)
-            //.setSelectedMonth(5)
+            .setLocale(Locale.ENGLISH)
+            // TODO Yearは機能する Monthは機能していない
+            .setSelectedMonth(date.monthValue)
+            .setSelectedYear(date.year)
             .setPositiveButton(DateMonthDialogListener
             { month, startDate, endDate, year, monthLabel ->
-                // TODO this.onResume()とかで対応できない?
                 val intent = Intent(application, MainActivity::class.java)
                 intent.putExtra("year", year)
                 intent.putExtra("month", month)
                 startActivity(intent)
+                finish()
+            })
+            .setNegativeButton(OnCancelMonthDialogListener
+            { dialog ->
+                dialog.dismiss()
             })
             .show()
     }
