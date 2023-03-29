@@ -40,16 +40,14 @@ class MainActivity : AppCompatActivity() {
             today
         }
 
-        // TODO ここから下のtodayをdateに変更
-        println(date)
-        
         // 月の表示
-        setMonthView(today)
+        setMonthView(date)
 
         // 表の生成
         initCategoryList()
-        val dayList: List<Int> = getDayList(today)
+        val dayList: List<Int> = getDayList(date)
 
+        // 当月の日かどうかのフラグ (先月末から来月頭の日をループで処理するにあたり必要)
         var thisMonthFlag: Boolean = false
         for (i in 0 until dayList.size / 7) {
             for (j in 0..6) {
@@ -65,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                 if (thisMonthFlag) {
                     val buttonId = resources.getIdentifier("button${i}_${j}", "id", packageName)
                     val button: Button = findViewById(buttonId)
-                    val date: LocalDate = today.withDayOfMonth(dayOfMonth)
+                    val date: LocalDate = date.withDayOfMonth(dayOfMonth)
                     button.text = getSpentMoneyText(date)
                     button.setOnClickListener {
                         val intent = Intent(application, DetailActivity::class.java)
