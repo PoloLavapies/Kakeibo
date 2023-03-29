@@ -5,18 +5,21 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannedString
-import android.view.View
-import android.view.View.OnClickListener
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Category
+import com.kal.rackmonthpicker.RackMonthPicker
+import com.kal.rackmonthpicker.listener.DateMonthDialogListener
+import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private val spendingCategoryIds = mutableListOf<Int>()
@@ -27,10 +30,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // TODO スワイプなどで遷移した場合に当月以外のデータも表示できるようにする
-        //  Intentを使い、年と月を受け取れるようにするのが良さそう
-        val today: LocalDate = LocalDate.now()
+        var today: LocalDate = LocalDate.now()
+        val year: Int = intent.getIntExtra("year", 0)
+        val month: Int = intent.getIntExtra("month", 0)
 
+        val date = if (year != 0 && month != 0) {
+            LocalDate.of(year, month, 1)
+        } else {
+            today
+        }
+
+        // TODO ここから下のtodayをdateに変更
+        println(date)
+        
         // 月の表示
         setMonthView(today)
 
@@ -78,6 +90,29 @@ class MainActivity : AppCompatActivity() {
         val monthView: TextView = findViewById(R.id.month);
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY年MM月")
         monthView.text = date.format(formatter)
+
+        // クリック時の処理
+        monthView.setOnClickListener() {
+            showMonthPickerDialog()
+        }
+    }
+
+    private fun showMonthPickerDialog() {
+        RackMonthPicker(this)
+            // JAPANESEかも
+            .setLocale(Locale.JAPAN)
+                // TODO
+            //.setSelectedYear(2023)
+            //.setSelectedMonth(5)
+            .setPositiveButton(DateMonthDialogListener
+            { month, startDate, endDate, year, monthLabel ->
+                // TODO this.onResume()とかで対応できない?
+                val intent = Intent(application, MainActivity::class.java)
+                intent.putExtra("year", year)
+                intent.putExtra("month", month)
+                startActivity(intent)
+            })
+            .show()
     }
 
     // 前後の月を含む、6週分の日のリストを返す (日曜始まり)
