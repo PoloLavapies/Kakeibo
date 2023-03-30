@@ -1,4 +1,4 @@
-package com.example.kakeibo
+package com.example.kakeibo.activity
 
 import android.app.DatePickerDialog
 import android.content.Intent
@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.kakeibo.R
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
 import java.time.LocalDate
@@ -25,7 +26,7 @@ class AddActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add)
 
         // 日付
-        var dateEdit = findViewById<EditText>(R.id.date)
+        val dateEdit = findViewById<EditText>(R.id.date)
         dateEdit.inputType = InputType.TYPE_NULL
         if (intent.getStringExtra("date") != null) {
             dateEdit.setText(intent.getStringExtra("date").toString())
@@ -112,7 +113,7 @@ class AddActivity : AppCompatActivity() {
     private fun addData() {
         val categoryName: String = findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
 
-        // TODO 白色の場合「-1」になるので動きはするが、安全なコードに直したい
+        // TODO ボタン色の判定に関して、白色の場合「-1」になるので動きはするが、安全なコードに直したい
         val categoryId: Int = if (findViewById<TextView>(R.id.button_spending).currentTextColor == -1) {
             categoryIdMapSpending[categoryName]!!
         } else {
@@ -126,9 +127,6 @@ class AddActivity : AppCompatActivity() {
         val db = KakeiboDatabase.getInstance(this)
         db.spendingDao().insert(spending)
 
-        // TODO MainActivityの当月以外の画面や別画面から遷移した場合の処理を追加
-        val intent = Intent(this,MainActivity::class.java)
-        startActivity(intent)
         finish()
     }
 }

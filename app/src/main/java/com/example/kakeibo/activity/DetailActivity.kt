@@ -1,4 +1,4 @@
-package com.example.kakeibo
+package com.example.kakeibo.activity
 
 import android.content.Intent
 import android.graphics.Color
@@ -11,15 +11,20 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import com.example.kakeibo.R
 import com.example.kakeibo.adapter.DetailViewAdapter
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
-
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
+    }
+
+    // TODO データの追加が完了した (それを検知した) タイミングで、この画面を閉じるのもアリ?
+    override fun onResume() {
+        super.onResume()
 
         val date: String = intent.getStringExtra("date").toString()
 
@@ -31,6 +36,7 @@ class DetailActivity : AppCompatActivity() {
         }
 
         for (spending: Spending in spendings) {
+            // TODO このメソッドを毎回呼び出さず、IDと分類名の対応表をメモリに載せておく実装もアリ?
             val category: String = getCategoryName(spending.categoryId)
             val money: SpannedString = buildSpannedString {
                 if (isSpending(spending.categoryId)) {

@@ -1,4 +1,4 @@
-package com.example.kakeibo
+package com.example.kakeibo.activity
 
 import android.content.Intent
 import android.graphics.Color
@@ -8,13 +8,12 @@ import android.text.SpannedString
 import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import com.example.kakeibo.R
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Category
-import com.kal.rackmonthpicker.MonthType
 import com.kal.rackmonthpicker.RackMonthPicker
 import com.kal.rackmonthpicker.listener.DateMonthDialogListener
 import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener
@@ -45,16 +44,17 @@ class MainActivity : AppCompatActivity() {
         val year: Int = intent.getIntExtra("year", 0)
         val month: Int = intent.getIntExtra("month", 0)
 
+        // TODO 変数の重複があるので、変えるかコメントを書いた方が良い
         val date = if (year != 0 && month != 0) {
             LocalDate.of(year, month, 1)
         } else {
             today
         }
 
-        // 月の表示
+        // 年と月の表示
         setMonthView(date)
 
-        // 表の生成
+        // 表の生成 (日と金額の表示)
         initCategoryList()
         val dayList: List<Int> = getDayList(date)
 
@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // TODO このコメントは必要なのか?
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setMonthView(date: LocalDate) {
         val monthView: TextView = findViewById(R.id.month);
@@ -109,11 +110,10 @@ class MainActivity : AppCompatActivity() {
             .setSelectedYear(date.year)
             .setPositiveButton(DateMonthDialogListener
             { month, startDate, endDate, year, monthLabel ->
-                val intent = Intent(application, MainActivity::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("year", year)
                 intent.putExtra("month", month)
                 startActivity(intent)
-                finish()
             })
             .setNegativeButton(OnCancelMonthDialogListener
             { dialog ->

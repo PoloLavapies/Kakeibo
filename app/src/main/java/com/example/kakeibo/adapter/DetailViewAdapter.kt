@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SimpleAdapter
 import android.widget.TextView
-import com.example.kakeibo.DetailActivity
+import com.example.kakeibo.activity.DetailActivity
 import com.example.kakeibo.R
 
 class DetailViewAdapter : SimpleAdapter {
