@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import com.example.kakeibo.R
@@ -20,6 +21,7 @@ import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
+
 
 class MainActivity : AppCompatActivity() {
     private val spendingCategoryIds = mutableListOf<Int>()
@@ -35,6 +37,9 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(application, AddActivity::class.java)
             startActivity(intent)
         }
+
+        val toolBar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolBar)
     }
 
     override fun onResume() {
