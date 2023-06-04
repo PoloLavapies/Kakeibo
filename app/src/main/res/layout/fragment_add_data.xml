@@ -1,14 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragment.AddDataFragment">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="30dp"
+            android:layout_margin="5dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 曜日 -->
+        <TextView
+            android:id="@+id/weekday_0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="日"
+            android:textColor="@color/red"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/weekday_1"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+            app:layout_constraintHorizontal_chainStyle="spread"/>
+        <TextView
+            android:id="@+id/weekday_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="月"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@+id/weekday_0"
+            app:layout_constraintEnd_toStartOf="@+id/weekday_2"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+            app:layout_constraintHorizontal_chainStyle="spread"/>
+        <TextView
+            android:id="@+id/weekday_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="火"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@+id/weekday_1"
+            app:layout_constraintEnd_toStartOf="@+id/weekday_3"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+            app:layout_constraintHorizontal_chainStyle="spread"/>
+        <TextView
+            android:id="@+id/weekday_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="水"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@+id/weekday_2"
+            app:layout_constraintEnd_toStartOf="@+id/weekday_4"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+            app:layout_constraintHorizontal_chainStyle="spread"/>
+        <TextView
+            android:id="@+id/weekday_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="木"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@+id/weekday_3"
+            app:layout_constraintEnd_toStartOf="@+id/weekday_5"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+            app:layout_constraintHorizontal_chainStyle="spread"/>
+        <TextView
+            android:id="@+id/weekday_5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="金"
+            android:textSize="15dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@+id/weekday_4"
+            app:layout_constraintEnd_toStartOf="@+id/weekday_6"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+            app:layout_constraintHorizontal_chainStyle="spread"/>
+        <TextView
+            android:id="@+id/weekday_6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="土"
+            android:textColor="@color/blue"
+            android:textSize="15dp"
+            android:layout_marginRight="5dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@+id/weekday_5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+            app:layout_constraintHorizontal_chainStyle="spread"/>
+
+        <Button
+            android:id="@+id/add_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:text="＋"
+            android:textSize="20dp"
+            android:background="@drawable/circle_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

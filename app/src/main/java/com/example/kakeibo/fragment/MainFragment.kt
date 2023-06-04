@@ -22,11 +22,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MainFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class MainFragment : Fragment() {
     private var year: Int = 0
     private var month: Int = 0
@@ -42,7 +37,8 @@ class MainFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_main, container, false)
@@ -50,7 +46,7 @@ class MainFragment : Fragment() {
         val addButton = view.findViewById<Button>(R.id.add_button)
 
         addButton.setOnClickListener {
-            val fragment = AddDataFragment.newInstance("あ", "い")
+            val fragment = AddDataFragment.newInstance(null)
             val transaction = parentFragmentManager.beginTransaction()
             transaction.addToBackStack(null)
             transaction.replace(R.id.fragment_container, fragment)
@@ -59,7 +55,7 @@ class MainFragment : Fragment() {
 
         return view
     }
-    
+
     override fun onResume() {
         super.onResume()
 
@@ -215,6 +211,7 @@ class MainFragment : Fragment() {
         fun newInstance(year: Int, month: Int) =
             MainFragment().apply {
                 arguments = Bundle().apply {
+                    // yearとmonthは定数化したい。他のクラスについても同様。
                     putInt("year", year)
                     putInt("month", month)
                 }

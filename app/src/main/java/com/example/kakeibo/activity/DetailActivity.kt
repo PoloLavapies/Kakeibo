@@ -70,9 +70,9 @@ class DetailActivity : AppCompatActivity() {
 
         val addButton = findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
-            val intent = Intent(application, AddActivity::class.java)
+            /*val intent = Intent(application, AddActivity::class.java)
             intent.putExtra("date", date)
-            startActivity(intent)
+            startActivity(intent)*/
         }
     }
 

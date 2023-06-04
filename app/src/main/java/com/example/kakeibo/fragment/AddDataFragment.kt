@@ -1,59 +1,165 @@
 package com.example.kakeibo.fragment
 
+import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.InputType
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.*
 import com.example.kakeibo.R
+import com.example.kakeibo.database.KakeiboDatabase
+import com.example.kakeibo.entity.Spending
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [AddDataFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class AddDataFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var date: String? = null
+    // 分類名とIDの対応表 選択されたカテゴリ名からIDを取得するために使用する
+    private val categoryIdMapSpending = mutableMapOf<String, Int>()
+    private val categoryIdMapIncome = mutableMapOf<String, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            date = it.getString("date")
         }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_data, container, false)
+        super.onCreate(savedInstanceState)
+
+        val view: View = inflater.inflate(R.layout.fragment_add_data, container, false)
+
+        // 日付
+        // TODO 後で戻す
+        // val dateEdit = view.findViewById<EditText>(R.id.date)
+        // dateEdit.inputType = InputType.TYPE_NULL
+        val dateEdit = view.findViewById<TextView>(R.id.month)
+        if (date != null) {
+            dateEdit.setText(date)
+        } else {
+            dateEdit.setText(getDate())
+        }
+        /*dateEdit.setOnClickListener() {
+            showDatePickerDialog(dateEdit)
+        }*/
+
+        // プルダウンの実装 (分類)
+        val adapterSpending: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
+        adapterSpending.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapterIncome: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
+        adapterIncome.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        val db = KakeiboDatabase.getInstance(requireContext())
+        val categories = db.categoryDao().getAll()
+        for (category in categories) {
+            if (category.isSpending) {
+                adapterSpending.add(category.name)
+                categoryIdMapSpending[category.name] = category.id
+            } else {
+                adapterIncome.add(category.name)
+                categoryIdMapIncome[category.name] = category.id
+            }
+        }
+
+        /*val spinner = view.findViewById<Spinner>(R.id.category_spinner)
+        spinner.adapter = adapterSpending
+
+        // 分類ボタン押下時の処理
+        val spendingButton = findViewById<TextView>(R.id.button_spending)
+        val incomeButton = findViewById<TextView>(R.id.button_income)
+        incomeButton.setOnClickListener {
+            spendingButton.setTextColor(resources.getColor(R.color.purple_500))
+            spendingButton.background = resources.getDrawable(R.drawable.income_button)
+            incomeButton.setTextColor(resources.getColor(R.color.white));
+            incomeButton.background = resources.getDrawable(R.drawable.spending_button)
+            spinner.adapter = adapterIncome
+        }
+        spendingButton.setOnClickListener {
+            incomeButton.setTextColor(resources.getColor(R.color.purple_500))
+            incomeButton.background = resources.getDrawable(R.drawable.income_button)
+            spendingButton.setTextColor(resources.getColor(R.color.white));
+            spendingButton.background = resources.getDrawable(R.drawable.spending_button)
+            spinner.adapter = adapterSpending
+        }
+
+        // 追加ボタン押下時の処理
+        val addButton = findViewById<Button>(R.id.add_button)
+        addButton.setOnClickListener {
+            addData()
+        }
+
+        */
+
+        return view
     }
 
+
+    /* 日付ピッカーダイアログを開くためのメソッド */
+    /*fun showDatePickerDialog(dateEdit: EditText) {
+        val selectedDate: LocalDate = LocalDate.parse(
+            findViewById<EditText>(R.id.date).text.toString(),
+            DateTimeFormatter.ISO_DATE)
+
+        //日付ピッカーダイアログを生成および設定
+        DatePickerDialog(
+            this,
+            //ダイアログのクリックイベント設定
+            { _, year, month, day ->
+                val date: LocalDate = LocalDate.of(year, month + 1, day)
+                dateEdit.setText(date.format(DateTimeFormatter.ISO_DATE))
+            },
+            // ダイアログを開いたときに選択されている日付 (月のみ0オリジン)
+            selectedDate.year,
+            selectedDate.monthValue - 1,
+            selectedDate.dayOfMonth
+        ).apply {
+        }.show()
+    }
+    */
+
+    private fun getDate(): String {
+        val date: LocalDate = LocalDate.now()
+        return date.format(DateTimeFormatter.ISO_DATE)
+    }
+
+    /*
+    private fun addData() {
+        val categoryName: String = findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
+
+        // TODO ボタン色の判定に関して、白色の場合「-1」になるので動きはするが、安全なコードに直したい
+        val categoryId: Int = if (findViewById<TextView>(R.id.button_spending).currentTextColor == -1) {
+            categoryIdMapSpending[categoryName]!!
+        } else {
+            categoryIdMapIncome[categoryName]!!
+        }
+        val money: Int = findViewById<EditText>(R.id.money).text.toString().toInt()
+        val dateStr = findViewById<EditText>(R.id.date).text.toString()
+        val detail = findViewById<EditText>(R.id.detail).text.toString()
+        val spending = Spending(0, categoryId, money, dateStr, detail)
+
+        val db = KakeiboDatabase.getInstance(this)
+        db.spendingDao().insert(spending)
+
+        finish()
+    }
+
+
+     */
+
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AddDataFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(date: String?) =
             AddDataFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putString("date", date)
                 }
             }
     }
