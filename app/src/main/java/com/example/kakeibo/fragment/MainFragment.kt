@@ -211,7 +211,7 @@ class MainFragment : Fragment() {
         fun newInstance(year: Int, month: Int) =
             MainFragment().apply {
                 arguments = Bundle().apply {
-                    // yearとmonthは定数化したい。他のクラスについても同様。
+                    // TODO yearとmonthは定数化したい。他のクラスについても同様。
                     putInt("year", year)
                     putInt("month", month)
                 }

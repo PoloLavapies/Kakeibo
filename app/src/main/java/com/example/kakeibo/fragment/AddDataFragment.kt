@@ -38,18 +38,15 @@ class AddDataFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_add_data, container, false)
 
         // 日付
-        // TODO 後で戻す
-        // val dateEdit = view.findViewById<EditText>(R.id.date)
-        // dateEdit.inputType = InputType.TYPE_NULL
-        val dateEdit = view.findViewById<TextView>(R.id.month)
+        val dateEdit = view.findViewById<EditText>(R.id.date)
         if (date != null) {
             dateEdit.setText(date)
         } else {
             dateEdit.setText(getDate())
         }
-        /*dateEdit.setOnClickListener() {
-            showDatePickerDialog(dateEdit)
-        }*/
+        dateEdit.setOnClickListener() {
+            showDatePickerDialog(dateEdit, view)
+        }
 
         // プルダウンの実装 (分類)
         val adapterSpending: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
@@ -69,12 +66,12 @@ class AddDataFragment : Fragment() {
             }
         }
 
-        /*val spinner = view.findViewById<Spinner>(R.id.category_spinner)
+        val spinner = view.findViewById<Spinner>(R.id.category_spinner)
         spinner.adapter = adapterSpending
 
         // 分類ボタン押下時の処理
-        val spendingButton = findViewById<TextView>(R.id.button_spending)
-        val incomeButton = findViewById<TextView>(R.id.button_income)
+        val spendingButton = view.findViewById<TextView>(R.id.button_spending)
+        val incomeButton = view.findViewById<TextView>(R.id.button_income)
         incomeButton.setOnClickListener {
             spendingButton.setTextColor(resources.getColor(R.color.purple_500))
             spendingButton.background = resources.getDrawable(R.drawable.income_button)
@@ -91,26 +88,24 @@ class AddDataFragment : Fragment() {
         }
 
         // 追加ボタン押下時の処理
-        val addButton = findViewById<Button>(R.id.add_button)
+        val addButton = view.findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
-            addData()
+            addData(view)
         }
-
-        */
 
         return view
     }
 
 
     /* 日付ピッカーダイアログを開くためのメソッド */
-    /*fun showDatePickerDialog(dateEdit: EditText) {
+    fun showDatePickerDialog(dateEdit: EditText, view: View) {
         val selectedDate: LocalDate = LocalDate.parse(
-            findViewById<EditText>(R.id.date).text.toString(),
+            view.findViewById<EditText>(R.id.date).text.toString(),
             DateTimeFormatter.ISO_DATE)
 
         //日付ピッカーダイアログを生成および設定
         DatePickerDialog(
-            this,
+            requireContext(),
             //ダイアログのクリックイベント設定
             { _, year, month, day ->
                 val date: LocalDate = LocalDate.of(year, month + 1, day)
@@ -123,36 +118,32 @@ class AddDataFragment : Fragment() {
         ).apply {
         }.show()
     }
-    */
 
     private fun getDate(): String {
         val date: LocalDate = LocalDate.now()
         return date.format(DateTimeFormatter.ISO_DATE)
     }
 
-    /*
-    private fun addData() {
-        val categoryName: String = findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
+    private fun addData(view: View) {
+        val categoryName: String = view.findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
 
         // TODO ボタン色の判定に関して、白色の場合「-1」になるので動きはするが、安全なコードに直したい
-        val categoryId: Int = if (findViewById<TextView>(R.id.button_spending).currentTextColor == -1) {
+        val categoryId: Int = if (view.findViewById<TextView>(R.id.button_spending).currentTextColor == -1) {
             categoryIdMapSpending[categoryName]!!
         } else {
             categoryIdMapIncome[categoryName]!!
         }
-        val money: Int = findViewById<EditText>(R.id.money).text.toString().toInt()
-        val dateStr = findViewById<EditText>(R.id.date).text.toString()
-        val detail = findViewById<EditText>(R.id.detail).text.toString()
+        val money: Int = view.findViewById<EditText>(R.id.money).text.toString().toInt()
+        val dateStr = view.findViewById<EditText>(R.id.date).text.toString()
+        val detail = view.findViewById<EditText>(R.id.detail).text.toString()
         val spending = Spending(0, categoryId, money, dateStr, detail)
 
-        val db = KakeiboDatabase.getInstance(this)
+        val db = KakeiboDatabase.getInstance(requireContext())
         db.spendingDao().insert(spending)
 
-        finish()
+        // TODO 画面を閉じる処理
+        parentFragmentManager.popBackStack()
     }
-
-
-     */
 
     companion object {
         @JvmStatic

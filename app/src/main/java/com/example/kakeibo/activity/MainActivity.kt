@@ -22,14 +22,7 @@ class MainActivity : AppCompatActivity() {
         val toolBar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolBar)
 
-        // 消せる部分がある (同じ処理をしている) 気がするので確認
         val fragment = MainFragment.newInstance(0, 0)
-        val args = Bundle()
-        args.putInt("year", 0)
-        args.putInt("month", 0)
-        fragment.arguments = args
-
-        // val fragment = AddDataFragment.newInstance(null)
 
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.fragment_container, fragment)
