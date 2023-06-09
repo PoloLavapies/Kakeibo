@@ -1,6 +1,7 @@
 package com.example.kakeibo.adapter
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.text.SpannedString
 import android.view.LayoutInflater
@@ -8,18 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SimpleAdapter
 import android.widget.TextView
-import com.example.kakeibo.activity.DetailActivity
 import com.example.kakeibo.R
+import com.example.kakeibo.fragment.DetailFragment
 
 class DetailViewAdapter : SimpleAdapter {
-    private var activity: DetailActivity? = null
+    private var context: Context? = null
+    private var fragment: DetailFragment? = null
     private var inflater: LayoutInflater
     private var list: MutableList<MutableMap<String, Any>>
 
-    constructor(activity: DetailActivity, list: MutableList<MutableMap<String, Any>>, layout :Int, from :Array<String>, to :IntArray)
-            : super(activity, list, layout, from, to) {
-        this.activity = activity
-        this.inflater = LayoutInflater.from(activity)
+    constructor(context: Context, fragment: DetailFragment, list: MutableList<MutableMap<String, Any>>, layout :Int, from :Array<String>, to :IntArray)
+            : super(context, list, layout, from, to) {
+        this.context = context
+        this.fragment = fragment
+        this.inflater = LayoutInflater.from(context)
         this.list = list
     }
 
@@ -39,11 +42,11 @@ class DetailViewAdapter : SimpleAdapter {
         button. setOnClickListener() {
             val spendingId: Int = list[position]["spendingId"] as Int
 
-            val builder: AlertDialog.Builder = AlertDialog.Builder(this.activity)
+            val builder: AlertDialog.Builder = AlertDialog.Builder(context)
             builder.setTitle("確認")
                 .setMessage("選択されたデータを削除します。")
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
-                    this.activity?.deleteSpendingData(spendingId)
+                    fragment?.deleteSpendingData(spendingId)
                     list.removeAt(position)
                     this.notifyDataSetChanged()
                 })

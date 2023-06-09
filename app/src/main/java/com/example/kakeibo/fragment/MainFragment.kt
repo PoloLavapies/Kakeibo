@@ -94,12 +94,13 @@ class MainFragment : Fragment() {
                     val button: Button = view.findViewById(buttonId)
                     val date: LocalDate = date.withDayOfMonth(dayOfMonth)
                     button.text = getSpentMoneyText(date)
-                    // TODO 遷移
-                    /*button.setOnClickListener {
-                        val intent = Intent(application, DetailActivity::class.java)
-                        intent.putExtra("date", date.format(DateTimeFormatter.ISO_DATE))
-                        startActivity(intent)
-                    }*/
+                    button.setOnClickListener {
+                        val fragment = DetailFragment.newInstance(date.format(DateTimeFormatter.ISO_DATE))
+                        val transaction = parentFragmentManager.beginTransaction()
+                        transaction.addToBackStack(null)
+                        transaction.replace(R.id.fragment_container, fragment)
+                        transaction.commit()
+                    }
                 } else {
                     dateView.setTextColor(Color.parseColor("lightgray"))
                 }
@@ -112,7 +113,6 @@ class MainFragment : Fragment() {
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY年MM月")
         monthView.text = date.format(formatter)
 
-        // TODO クリック時の処理
         monthView.setOnClickListener() {
             showMonthPickerDialog(date)
         }
