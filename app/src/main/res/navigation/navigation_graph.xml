@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/MainFragment">
+
+    <fragment
+        android:id="@+id/MainFragment"
+        android:name="com.example.kakeibo.fragment.MainFragment"
+        android:label="main_fragment"
+        tools:layout="@layout/fragment_main" >
+        <action
+            android:id="@+id/action_main_to_main"
+            app:destination="@id/MainFragment" />
+        <action
+            android:id="@+id/action_main_to_add_data"
+            app:destination="@id/AddDataFragment" />
+        <action
+            android:id="@+id/action_main_to_detail"
+            app:destination="@id/DetailFragment" />
+        <argument
+            android:name="year"
+            app:argType="integer"/>
+        <argument
+            android:name="month"
+            app:argType="integer"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/AddDataFragment"
+        android:name="com.example.kakeibo.fragment.AddDataFragment"
+        android:label="add_data_fragment"
+        tools:layout="@layout/fragment_add_data" >
+        <argument
+            android:name="date"
+            app:argType="string"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/DetailFragment"
+        android:name="com.example.kakeibo.fragment.DetailFragment"
+        android:label="detail_fragment"
+        tools:layout="@layout/fragment_detail" >
+        <action
+            android:id="@+id/action_detail_to_add_data"
+            app:destination="@id/AddDataFragment" />
+        <argument
+            android:name="date"
+            app:argType="string"/>
+    </fragment>
+</navigation>

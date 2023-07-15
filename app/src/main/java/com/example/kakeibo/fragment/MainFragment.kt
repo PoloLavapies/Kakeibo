@@ -12,6 +12,9 @@ import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.FragmentTransaction
+import androidx.navigation.fragment.NavHostFragment.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Category
@@ -23,6 +26,7 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 class MainFragment : Fragment() {
+    private val args: MainFragmentArgs by navArgs()
     private var year: Int = 0
     private var month: Int = 0
     private val spendingCategoryIds = mutableListOf<Int>()
@@ -30,10 +34,8 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            year = it.getInt("year")
-            month = it.getInt("month")
-        }
+        year = args.year
+        month = args.month
     }
 
     override fun onCreateView(
@@ -46,11 +48,8 @@ class MainFragment : Fragment() {
         val addButton = view.findViewById<Button>(R.id.add_button)
 
         addButton.setOnClickListener {
-            val fragment = AddDataFragment.newInstance(null)
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.addToBackStack(null)
-            transaction.replace(R.id.fragment_container, fragment)
-            transaction.commit()
+            val action = MainFragmentDirections.actionMainToAddData("")
+            findNavController().navigate(action)
         }
 
         return view
@@ -95,11 +94,9 @@ class MainFragment : Fragment() {
                     val date: LocalDate = date.withDayOfMonth(dayOfMonth)
                     button.text = getSpentMoneyText(date)
                     button.setOnClickListener {
-                        val fragment = DetailFragment.newInstance(date.format(DateTimeFormatter.ISO_DATE))
-                        val transaction = parentFragmentManager.beginTransaction()
-                        transaction.addToBackStack(null)
-                        transaction.replace(R.id.fragment_container, fragment)
-                        transaction.commit()
+                        val dateIsoFormat: String = date.format(DateTimeFormatter.ISO_DATE)
+                        val action = MainFragmentDirections.actionMainToDetail(dateIsoFormat)
+                        findNavController().navigate(action)
                     }
                 } else {
                     dateView.setTextColor(Color.parseColor("lightgray"))
@@ -127,10 +124,9 @@ class MainFragment : Fragment() {
             .setSelectedYear(date.year)
             .setPositiveButton(DateMonthDialogListener
             { month, startDate, endDate, year, monthLabel ->
-                val fragment = newInstance(year, month)
-                val transaction = parentFragmentManager.beginTransaction()
-                transaction.replace(R.id.fragment_container, fragment)
-                transaction.commit()
+                // TODO 同じ画面での遷移なので、viewModelやliveDataなどで対応したい
+                val action = MainFragmentDirections.actionMainToMain(year, month)
+                findNavController().navigate(action)
             })
             .setNegativeButton(OnCancelMonthDialogListener
             { dialog ->
@@ -204,17 +200,5 @@ class MainFragment : Fragment() {
                 append("${"%,d".format(savings)}円")
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(year: Int, month: Int) =
-            MainFragment().apply {
-                arguments = Bundle().apply {
-                    // TODO yearとmonthは定数化したい。他のクラスについても同様。
-                    putInt("year", year)
-                    putInt("month", month)
-                }
-            }
     }
 }

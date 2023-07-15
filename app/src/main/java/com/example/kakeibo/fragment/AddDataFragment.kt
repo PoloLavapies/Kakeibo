@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
@@ -14,16 +16,15 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class AddDataFragment : Fragment() {
-    private var date: String? = null
+    private val args: AddDataFragmentArgs by navArgs()
+    private var date: String = ""
     // 分類名とIDの対応表 選択されたカテゴリ名からIDを取得するために使用する
     private val categoryIdMapSpending = mutableMapOf<String, Int>()
     private val categoryIdMapIncome = mutableMapOf<String, Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            date = it.getString("date")
-        }
+        date = args.date
     }
 
     override fun onCreateView(
@@ -37,7 +38,7 @@ class AddDataFragment : Fragment() {
 
         // 日付
         val dateEdit = view.findViewById<EditText>(R.id.date)
-        if (date != null) {
+        if (date.isNotEmpty()) {
             dateEdit.setText(date)
         } else {
             dateEdit.setText(getDate())
@@ -89,6 +90,7 @@ class AddDataFragment : Fragment() {
         val addButton = view.findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
             addData(view)
+            findNavController().popBackStack()
         }
 
         return view
@@ -138,18 +140,5 @@ class AddDataFragment : Fragment() {
 
         val db = KakeiboDatabase.getInstance(requireContext())
         db.spendingDao().insert(spending)
-
-        // TODO 画面を閉じる処理
-        parentFragmentManager.popBackStack()
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(date: String?) =
-            AddDataFragment().apply {
-                arguments = Bundle().apply {
-                    putString("date", date)
-                }
-            }
     }
 }

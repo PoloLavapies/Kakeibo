@@ -12,19 +12,21 @@ import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.adapter.DetailViewAdapter
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
+import java.time.format.DateTimeFormatter
 
 class DetailFragment : Fragment() {
+    private val args: DetailFragmentArgs by navArgs()
     private var date: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            date = it.getString("date")!!
-        }
+        date = args.date
     }
 
     override fun onCreateView(
@@ -79,11 +81,8 @@ class DetailFragment : Fragment() {
 
         val addButton = view.findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
-            val fragment = AddDataFragment.newInstance(date)
-            val transaction = parentFragmentManager.beginTransaction()
-            transaction.addToBackStack(null)
-            transaction.replace(R.id.fragment_container, fragment)
-            transaction.commit()
+            val action = DetailFragmentDirections.actionDetailToAddData(date)
+            findNavController().navigate(action)
         }
 
         return view
@@ -107,15 +106,5 @@ class DetailFragment : Fragment() {
     private fun isSpending(id: Int): Boolean {
         val db = KakeiboDatabase.getInstance(requireContext())
         return db.categoryDao().isSpending(id)
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(date: String) =
-            DetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString("date", date)
-                }
-            }
     }
 }
