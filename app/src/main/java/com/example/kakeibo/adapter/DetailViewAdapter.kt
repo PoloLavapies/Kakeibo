@@ -27,7 +27,7 @@ class DetailViewAdapter : SimpleAdapter {
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var view: View = inflater.inflate(R.layout.activity_detail_row, parent, false)
+        var view: View = inflater.inflate(R.layout.fragment_detail_row, parent, false)
 
         // 金額
         val moneyView = view.findViewById<TextView>(R.id.money)

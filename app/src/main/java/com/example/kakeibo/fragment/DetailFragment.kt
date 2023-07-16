@@ -74,7 +74,7 @@ class DetailFragment : Fragment() {
             requireContext(),
             this,
             spendingMapList,
-            R.layout.activity_detail_row,
+            R.layout.fragment_detail_row,
             arrayOf("money", "detail"),
             intArrayOf(R.id.money, R.id.detail)
         )
