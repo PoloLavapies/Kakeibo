@@ -58,45 +58,16 @@ class MainFragment : Fragment() {
         }
 
         // 年と月の表示
-        setMonthView(view, date)
+        setPageTitle(view, date)
 
         // 表の生成 (日と金額の表示)
-        initCategoryList()
-        val dayList: List<Int> = getDayList(date)
-
-        // 当月の日かどうかのフラグ (先月末から来月頭の日をループで処理するにあたり必要)
-        var thisMonthFlag: Boolean = false
-        for (i in 0 until dayList.size / 7) {
-            for (j in 0..6) {
-                val dayOfMonth = dayList.get(i * 7 + j)
-                if (dayOfMonth == 1) {
-                    thisMonthFlag = !thisMonthFlag
-                }
-
-                val textViewId = resources.getIdentifier("date${i}_${j}", "id", requireContext().packageName)
-                val dateView: TextView = view.findViewById(textViewId)
-                dateView.text = dayList.get(i * 7 + j).toString()
-
-                if (thisMonthFlag) {
-                    val buttonId = resources.getIdentifier("button${i}_${j}", "id", requireContext().packageName)
-                    val button: Button = view.findViewById(buttonId)
-                    val date: LocalDate = date.withDayOfMonth(dayOfMonth)
-                    button.text = getSpentMoneyText(date)
-                    button.setOnClickListener {
-                        val dateIsoFormat: String = date.format(DateTimeFormatter.ISO_DATE)
-                        val action = MainFragmentDirections.actionMainToDetail(dateIsoFormat)
-                        findNavController().navigate(action)
-                    }
-                } else {
-                    dateView.setTextColor(Color.parseColor("lightgray"))
-                }
-            }
-        }
+        viewModel.initCategoryList(requireContext())
+        createTable(date, view)
 
         return view
     }
 
-    private fun setMonthView(view: View, date: LocalDate) {
+    private fun setPageTitle(view: View, date: LocalDate) {
         val monthView: TextView = view.findViewById(R.id.month);
         val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY年MM月")
         monthView.text = date.format(formatter)
@@ -126,6 +97,43 @@ class MainFragment : Fragment() {
             .show()
     }
 
+    private fun createTable(date: LocalDate, view: View) {
+        // ループ内で処理している週が当月であるかを示すフラグ
+        var thisMonthFlag: Boolean = false
+        val dayList: List<Int> = getDayList(date)
+        for (i in 0 until dayList.size / 7) {
+            for (j in 0..6) {
+                val dayOfMonth = dayList.get(i * 7 + j)
+                if (dayOfMonth == 1) {
+                    thisMonthFlag = !thisMonthFlag
+                }
+
+                val textViewId =
+                    resources.getIdentifier("date${i}_${j}", "id", requireContext().packageName)
+                val dateView: TextView = view.findViewById(textViewId)
+                dateView.text = dayList.get(i * 7 + j).toString()
+
+                if (thisMonthFlag) {
+                    val buttonId = resources.getIdentifier(
+                        "button${i}_${j}",
+                        "id",
+                        requireContext().packageName
+                    )
+                    val button: Button = view.findViewById(buttonId)
+                    val date: LocalDate = date.withDayOfMonth(dayOfMonth)
+                    button.text = getSpentMoneyText(date)
+                    button.setOnClickListener {
+                        val dateIsoFormat: String = date.format(DateTimeFormatter.ISO_DATE)
+                        val action = MainFragmentDirections.actionMainToDetail(dateIsoFormat)
+                        findNavController().navigate(action)
+                    }
+                } else {
+                    dateView.setTextColor(Color.parseColor("lightgray"))
+                }
+            }
+        }
+    }
+
     // 前後の月を含む、6週分の日のリストを返す (日曜始まり)
     private fun getDayList(dayOfThisMonth: LocalDate): List<Int> {
         val firstDayOfMonth: LocalDate = LocalDate.of(dayOfThisMonth.year, dayOfThisMonth.month, 1)
@@ -144,20 +152,6 @@ class MainFragment : Fragment() {
         }
 
         return dayList
-    }
-
-    // TODO ViewModelにロジックを配置したい
-    private fun initCategoryList() {
-        val db = KakeiboDatabase.getInstance(requireContext())
-        val categories: List<Category> = db.categoryDao().getAll()
-
-        for (category in categories) {
-            if (category.isSpending) {
-                viewModel.spendingCategoryIds.add(category.id)
-            } else {
-                viewModel.incomeCategoryIds.add(category.id)
-            }
-        }
     }
 
     // TODO DBとの通信回数を減らしたい。一度の通信でクラス変数などにデータを格納しておく?
