@@ -12,12 +12,15 @@ import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Category
+import com.example.kakeibo.viewmodel.AddDataViewModel
+import com.example.kakeibo.viewmodel.MainViewModel
 import com.kal.rackmonthpicker.RackMonthPicker
 import com.kal.rackmonthpicker.listener.DateMonthDialogListener
 import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener
@@ -27,14 +30,7 @@ import java.util.Locale
 
 class MainFragment : Fragment() {
     private val args: MainFragmentArgs by navArgs()
-    private var year: Int = 0
-    private var month: Int = 0
-    private val spendingCategoryIds = mutableListOf<Int>()
-    private val incomeCategoryIds = mutableListOf<Int>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,8 +39,8 @@ class MainFragment : Fragment() {
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_main, container, false)
 
-        year = args.year
-        month = args.month
+        viewModel.year = args.year
+        viewModel.month = args.month
 
         val addButton = view.findViewById<Button>(R.id.add_button)
 
@@ -55,8 +51,8 @@ class MainFragment : Fragment() {
 
         val today: LocalDate = LocalDate.now()
 
-        val date = if (year != 0 && month != 0) {
-            LocalDate.of(year, month, 1)
+        val date = if (viewModel.year != 0 && viewModel.month != 0) {
+            LocalDate.of(viewModel.year, viewModel.month, 1)
         } else {
             today
         }
@@ -150,15 +146,16 @@ class MainFragment : Fragment() {
         return dayList
     }
 
+    // TODO ViewModelにロジックを配置したい
     private fun initCategoryList() {
         val db = KakeiboDatabase.getInstance(requireContext())
         val categories: List<Category> = db.categoryDao().getAll()
 
         for (category in categories) {
             if (category.isSpending) {
-                spendingCategoryIds.add(category.id)
+                viewModel.spendingCategoryIds.add(category.id)
             } else {
-                incomeCategoryIds.add(category.id)
+                viewModel.incomeCategoryIds.add(category.id)
             }
         }
     }
@@ -174,7 +171,7 @@ class MainFragment : Fragment() {
         var incomeTotal:Int = 0
 
         for (spending in db.spendingDao().getByDate(dateString)) {
-            if (spending.categoryId in spendingCategoryIds) {
+            if (spending.categoryId in viewModel.spendingCategoryIds) {
                 spendingTotal += spending.money
             } else {
                 incomeTotal += spending.money

@@ -43,7 +43,7 @@ class AddDataFragment : Fragment() {
         }
 
         // プルダウンの実装 (分類)
-        // TODO adapterに関するロジックを別クラスに切り出したい
+        // TODO adapterに関するロジックを別クラスに切り出したい (とりあえずviewModelに置く?)
         val adapterSpending: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
         adapterSpending.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         val adapterIncome: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
