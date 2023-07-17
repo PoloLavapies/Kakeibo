@@ -52,14 +52,6 @@ class MainFragment : Fragment() {
             findNavController().navigate(action)
         }
 
-        return view
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        val view: View = requireView()
-
         val today: LocalDate = LocalDate.now()
 
         val date = if (year != 0 && month != 0) {
@@ -103,6 +95,8 @@ class MainFragment : Fragment() {
                 }
             }
         }
+
+        return view
     }
 
     private fun setMonthView(view: View, date: LocalDate) {
