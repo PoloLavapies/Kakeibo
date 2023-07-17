@@ -24,17 +24,12 @@ class DetailFragment : Fragment() {
     private val args: DetailFragmentArgs by navArgs()
     private var date: String = ""
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        date = args.date
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        super.onCreate(savedInstanceState)
+        date = args.date
 
         val view: View = inflater.inflate(R.layout.fragment_detail, container, false)
 

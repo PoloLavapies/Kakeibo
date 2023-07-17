@@ -7,32 +7,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
+import com.example.kakeibo.viewmodel.AddDataViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class AddDataFragment : Fragment() {
     private val args: AddDataFragmentArgs by navArgs()
     private var date: String = ""
-    // 分類名とIDの対応表 選択されたカテゴリ名からIDを取得するために使用する
-    private val categoryIdMapSpending = mutableMapOf<String, Int>()
-    private val categoryIdMapIncome = mutableMapOf<String, Int>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        date = args.date
-    }
+    private val viewModel: AddDataViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        super.onCreate(savedInstanceState)
+        date = args.date
 
         val view: View = inflater.inflate(R.layout.fragment_add_data, container, false)
 
@@ -48,6 +43,7 @@ class AddDataFragment : Fragment() {
         }
 
         // プルダウンの実装 (分類)
+        // TODO adapterに関するロジックを別クラスに切り出したい
         val adapterSpending: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
         adapterSpending.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         val adapterIncome: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
@@ -58,15 +54,16 @@ class AddDataFragment : Fragment() {
         for (category in categories) {
             if (category.isSpending) {
                 adapterSpending.add(category.name)
-                categoryIdMapSpending[category.name] = category.id
+                viewModel.categoryIdMapSpending[category.name] = category.id
             } else {
                 adapterIncome.add(category.name)
-                categoryIdMapIncome[category.name] = category.id
+                viewModel.categoryIdMapIncome[category.name] = category.id
             }
         }
 
         val spinner = view.findViewById<Spinner>(R.id.category_spinner)
         spinner.adapter = adapterSpending
+        viewModel.isSpendingsShwon = true
 
         // 分類ボタン押下時の処理
         val spendingButton = view.findViewById<TextView>(R.id.button_spending)
@@ -77,6 +74,7 @@ class AddDataFragment : Fragment() {
             incomeButton.setTextColor(resources.getColor(R.color.white));
             incomeButton.background = resources.getDrawable(R.drawable.spending_button)
             spinner.adapter = adapterIncome
+            viewModel.isSpendingsShwon = false
         }
         spendingButton.setOnClickListener {
             incomeButton.setTextColor(resources.getColor(R.color.purple_500))
@@ -84,6 +82,7 @@ class AddDataFragment : Fragment() {
             spendingButton.setTextColor(resources.getColor(R.color.white));
             spendingButton.background = resources.getDrawable(R.drawable.spending_button)
             spinner.adapter = adapterSpending
+            viewModel.isSpendingsShwon = true
         }
 
         // 追加ボタン押下時の処理
@@ -127,11 +126,10 @@ class AddDataFragment : Fragment() {
     private fun addData(view: View) {
         val categoryName: String = view.findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
 
-        // TODO ボタン色の判定に関して、白色の場合「-1」になるので動きはするが、安全なコードに直したい
-        val categoryId: Int = if (view.findViewById<TextView>(R.id.button_spending).currentTextColor == -1) {
-            categoryIdMapSpending[categoryName]!!
+        val categoryId: Int = if (viewModel.isSpendingsShwon) {
+            viewModel.categoryIdMapSpending[categoryName]!!
         } else {
-            categoryIdMapIncome[categoryName]!!
+            viewModel.categoryIdMapIncome[categoryName]!!
         }
         val money: Int = view.findViewById<EditText>(R.id.money).text.toString().toInt()
         val dateStr = view.findViewById<EditText>(R.id.date).text.toString()

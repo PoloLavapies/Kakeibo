@@ -34,8 +34,6 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        year = args.year
-        month = args.month
     }
 
     override fun onCreateView(
@@ -44,6 +42,9 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_main, container, false)
+
+        year = args.year
+        month = args.month
 
         val addButton = view.findViewById<Button>(R.id.add_button)
 
