@@ -11,6 +11,7 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -18,6 +19,7 @@ import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.adapter.DetailViewAdapter
 import com.example.kakeibo.database.KakeiboDatabase
+import com.example.kakeibo.databinding.FragmentDetailBinding
 import com.example.kakeibo.entity.Spending
 import com.example.kakeibo.viewmodel.AddDataViewModel
 import com.example.kakeibo.viewmodel.DetailViewModel
@@ -34,10 +36,10 @@ class DetailFragment : Fragment() {
     ): View? {
         vm.date = args.date
 
-        val view: View = inflater.inflate(R.layout.fragment_detail, container, false)
+        val binding: FragmentDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
+        binding.vm = vm
 
-        // 日付の設定
-        view.findViewById<TextView>(R.id.date).text = vm.date
+        val view: View = binding.root
 
         val spendings: List<Spending> = getSpendingData(vm.date)
         val spendingMapList: MutableList<MutableMap<String, Any>> = mutableListOf()
