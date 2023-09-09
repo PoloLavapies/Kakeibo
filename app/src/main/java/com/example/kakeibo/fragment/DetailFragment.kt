@@ -12,28 +12,34 @@ import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.adapter.DetailViewAdapter
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
+import com.example.kakeibo.viewmodel.AddDataViewModel
+import com.example.kakeibo.viewmodel.DetailViewModel
 import java.time.format.DateTimeFormatter
 
 class DetailFragment : Fragment() {
     private val args: DetailFragmentArgs by navArgs()
-    private var date: String = ""
+    private val vm: DetailViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        date = args.date
+        vm.date = args.date
 
         val view: View = inflater.inflate(R.layout.fragment_detail, container, false)
 
-        val spendings: List<Spending> = getSpendingData(date)
+        // 日付の設定
+        view.findViewById<TextView>(R.id.date).text = vm.date
+
+        val spendings: List<Spending> = getSpendingData(vm.date)
         val spendingMapList: MutableList<MutableMap<String, Any>> = mutableListOf()
 
         if (spendings.isNotEmpty()) {
@@ -76,7 +82,7 @@ class DetailFragment : Fragment() {
 
         val addButton = view.findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
-            val action = DetailFragmentDirections.actionDetailToAddData(date)
+            val action = DetailFragmentDirections.actionDetailToAddData(vm.date)
             findNavController().navigate(action)
         }
 
