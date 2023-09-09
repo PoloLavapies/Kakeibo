@@ -13,6 +13,9 @@ class MainViewModel: ViewModel() {
     var spendingCategoryIds = mutableListOf<Int>()
     var incomeCategoryIds = mutableListOf<Int>()
 
+    // TODO 初期化処理は別のところに書きたい
+    //  以下によるとinit{}で良さそう
+    //  https://qiita.com/kame_yang/items/a88c316b5fd90c212d78
     fun initCategoryList(context: Context) {
         val db = KakeiboDatabase.getInstance(context)
         val categories: List<Category> = db.categoryDao().getAll()

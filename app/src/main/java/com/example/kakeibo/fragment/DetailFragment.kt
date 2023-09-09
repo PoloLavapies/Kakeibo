@@ -27,7 +27,9 @@ import java.time.format.DateTimeFormatter
 
 class DetailFragment : Fragment() {
     private val args: DetailFragmentArgs by navArgs()
-    private val vm: DetailViewModel by viewModels()
+    private val vm: DetailViewModel by viewModels{
+        DetailViewModel.Factory(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,48 +37,24 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         vm.date = args.date
+        // TODO dateをLiveDataにすれば、以下の実装は消せる
+        vm.init()
 
         val binding: FragmentDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         binding.vm = vm
-
         val view: View = binding.root
 
-        val spendings: List<Spending> = getSpendingData(vm.date)
-        val spendingMapList: MutableList<MutableMap<String, Any>> = mutableListOf()
-
-        if (spendings.isNotEmpty()) {
+        if (vm.spendings.isNotEmpty()) {
+            // TODO ここもViewModelで管理
+            //  spendingをLiveDataにし、visibilityもLiveDataにすればOK
             view.findViewById<TextView>(R.id.text_no_data).visibility = View.GONE
-        }
-
-        for (spending: Spending in spendings) {
-            // TODO このメソッドを毎回呼び出さず、IDと分類名の対応表をメモリに載せておく実装もアリ?
-            val category: String = getCategoryName(spending.categoryId)
-            val money: SpannedString = buildSpannedString {
-                if (isSpending(spending.categoryId)) {
-                    color(Color.RED) {
-                        append("-${"%,d".format(spending.money)}円")
-                    }
-                } else {
-                    color(Color.BLUE) {
-                        append("+${"%,d".format(spending.money)}円")
-                    }
-                }
-            }
-            val detail: String = spending.detail
-
-            spendingMapList.add(mutableMapOf(
-                "money" to money,
-                "detail" to if (detail == "") "分類:${category}" else "分類:${category} 詳細:${detail}",
-                // 以下の要素は表示はしない
-                "spendingId" to spending.id
-            ))
         }
 
         val listView: ListView = view.findViewById(R.id.detail_list)
         listView.adapter = DetailViewAdapter(
             requireContext(),
             this,
-            spendingMapList,
+            vm.spendingMapList,
             R.layout.fragment_detail_row,
             arrayOf("money", "detail"),
             intArrayOf(R.id.money, R.id.detail)
@@ -91,23 +69,8 @@ class DetailFragment : Fragment() {
         return view
     }
 
-    private fun getSpendingData(date: String): List<Spending> {
-        val db = KakeiboDatabase.getInstance(requireContext())
-        return db.spendingDao().getByDate(date)
-    }
-
     fun deleteSpendingData(id: Int) {
-        val db = KakeiboDatabase.getInstance(requireContext())
-        return db.spendingDao().deleteById(id)
-    }
-
-    private fun getCategoryName(id: Int): String {
-        val db = KakeiboDatabase.getInstance(requireContext())
-        return db.categoryDao().getCategoryName(id)
-    }
-
-    private fun isSpending(id: Int): Boolean {
-        val db = KakeiboDatabase.getInstance(requireContext())
-        return db.categoryDao().isSpending(id)
+        // TODO ViewModel経由で削除するのは微妙な気もする
+        vm.deleteSpendingData(id)
     }
 }
