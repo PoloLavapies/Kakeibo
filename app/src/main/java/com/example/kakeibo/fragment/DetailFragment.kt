@@ -44,12 +44,6 @@ class DetailFragment : Fragment() {
         binding.vm = vm
         val view: View = binding.root
 
-        if (vm.spendings.isNotEmpty()) {
-            // TODO ここもViewModelで管理
-            //  spendingをLiveDataにし、visibilityもLiveDataにすればOK
-            view.findViewById<TextView>(R.id.text_no_data).visibility = View.GONE
-        }
-
         val listView: ListView = view.findViewById(R.id.detail_list)
         listView.adapter = DetailViewAdapter(
             requireContext(),

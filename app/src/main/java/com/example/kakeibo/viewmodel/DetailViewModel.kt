@@ -23,13 +23,17 @@ class DetailViewModel(context: Context) : ViewModel() {
     private val dataModel = DataModel(context)
 
     var date: String = ""
+    var noDataTextVisible: Boolean = true
     lateinit var spendings: List<Spending>
     lateinit var spendingMapList: MutableList<MutableMap<String, Any>>
 
     fun init() {
         spendings = dataModel.getSpendingData(date)
-        spendingMapList = mutableListOf()
+        if (spendings.isNotEmpty()) {
+            noDataTextVisible = false
+        }
 
+        spendingMapList = mutableListOf()
         for (spending: Spending in spendings) {
             // TODO このメソッドを毎回呼び出さず、IDと分類名の対応表をメモリに載せておく実装もアリ?
             val category: String = dataModel.getCategoryName(spending.categoryId)
