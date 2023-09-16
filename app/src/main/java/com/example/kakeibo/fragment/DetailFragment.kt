@@ -37,7 +37,6 @@ class DetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         vm.date = args.date
-        // TODO dateをLiveDataにすれば、以下の実装は消せる
         vm.init()
 
         val binding: FragmentDetailBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)

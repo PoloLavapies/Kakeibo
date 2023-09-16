@@ -1,11 +1,59 @@
 package com.example.kakeibo.viewmodel
 
+import android.content.Context
+import android.view.View
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.example.kakeibo.R
+import com.example.kakeibo.database.KakeiboDatabase
+import com.example.kakeibo.entity.Spending
+import com.example.kakeibo.model.DataModel
 
-class AddDataViewModel: ViewModel() {
+class AddDataViewModel(context: Context): ViewModel() {
+
+    class Factory(private val context: Context) : ViewModelProvider.NewInstanceFactory() {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            return AddDataViewModel(context) as T
+        }
+    }
+
+    private val dataModel = DataModel(context)
+
+    var date: String = ""
+    // 分類目のリスト
+    var categoryNameListSpending = mutableListOf<String>()
+    var categoryNameListIncome = mutableListOf<String>()
     // 分類名とIDの対応表 選択されたカテゴリ名からIDを取得するために使用する
-    var categoryIdMapSpending = mutableMapOf<String, Int>()
-    var categoryIdMapIncome = mutableMapOf<String, Int>()
+    private var categoryIdMapSpending = mutableMapOf<String, Int>()
+    private var categoryIdMapIncome = mutableMapOf<String, Int>()
     // 表示されている分類
-    var isSpendingsShwon: Boolean = true
+    var isSpendingsShown: Boolean = true
+
+    fun init() {
+        val categories = dataModel.getAllCategories()
+
+        for (category in categories) {
+            if (category.isSpending) {
+                categoryNameListSpending.add(category.name)
+                categoryIdMapSpending[category.name] = category.id
+            } else {
+                categoryNameListIncome.add(category.name)
+                categoryIdMapIncome[category.name] = category.id
+            }
+        }
+    }
+
+    fun addData(categoryName: String, money: Int, dateStr: String, detail: String) {
+        val categoryId: Int = if (isSpendingsShown) {
+            categoryIdMapSpending[categoryName]!!
+        } else {
+            categoryIdMapIncome[categoryName]!!
+        }
+        val spending = Spending(0, categoryId, money, dateStr, detail)
+
+        dataModel.addSpendingData(spending)
+    }
 }
