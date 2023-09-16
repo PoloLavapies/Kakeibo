@@ -3,7 +3,6 @@ package com.example.kakeibo.fragment
 import android.graphics.Color
 import android.os.Bundle
 import android.text.SpannedString
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,26 +10,25 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
-import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.NavHostFragment.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.database.KakeiboDatabase
-import com.example.kakeibo.entity.Category
-import com.example.kakeibo.viewmodel.AddDataViewModel
 import com.example.kakeibo.viewmodel.MainViewModel
 import com.kal.rackmonthpicker.RackMonthPicker
 import com.kal.rackmonthpicker.listener.DateMonthDialogListener
 import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.*
 
 class MainFragment : Fragment() {
     private val args: MainFragmentArgs by navArgs()
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels {
+        MainViewModel.Factory(requireContext())
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +59,7 @@ class MainFragment : Fragment() {
         setPageTitle(view, date)
 
         // 表の生成 (日と金額の表示)
-        viewModel.initCategoryList(requireContext())
+        viewModel.initCategoryList()
         createTable(date, view)
 
         return view
@@ -141,7 +139,8 @@ class MainFragment : Fragment() {
 
         var dayList: List<Int> = arrayListOf()
 
-        var date: LocalDate = firstDayOfMonth.minusDays((firstDayOfMonth.dayOfWeek.value % 7).toLong())
+        var date: LocalDate =
+            firstDayOfMonth.minusDays((firstDayOfMonth.dayOfWeek.value % 7).toLong())
         while (!date.isAfter(lastDayOfMonth)) {
             dayList += date.dayOfMonth
             date = date.plusDays(1)
@@ -161,8 +160,8 @@ class MainFragment : Fragment() {
         val db = KakeiboDatabase.getInstance(requireContext())
 
         // カテゴリ
-        var spendingTotal:Int = 0
-        var incomeTotal:Int = 0
+        var spendingTotal: Int = 0
+        var incomeTotal: Int = 0
 
         for (spending in db.spendingDao().getByDate(dateString)) {
             if (spending.categoryId in viewModel.spendingCategoryIds) {
