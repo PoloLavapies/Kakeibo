@@ -4,6 +4,8 @@ import android.content.Context
 import android.view.View
 import android.widget.EditText
 import android.widget.Spinner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.kakeibo.R
@@ -30,7 +32,8 @@ class AddDataViewModel(context: Context): ViewModel() {
     private var categoryIdMapSpending = mutableMapOf<String, Int>()
     private var categoryIdMapIncome = mutableMapOf<String, Int>()
     // 表示されている分類
-    var isSpendingsShown: Boolean = true
+    private val _isSpendingsShown = MutableLiveData(true)
+    val isSpendingsShown: LiveData<Boolean> get() = _isSpendingsShown
 
     fun init() {
         val categories = dataModel.getAllCategories()
@@ -46,8 +49,16 @@ class AddDataViewModel(context: Context): ViewModel() {
         }
     }
 
+    fun changeCategoryListToSpending() {
+        _isSpendingsShown.value = true
+    }
+
+    fun changeCategoryListToIncome() {
+        _isSpendingsShown.value = false
+    }
+
     fun addData(categoryName: String, money: Int, dateStr: String, detail: String) {
-        val categoryId: Int = if (isSpendingsShown) {
+        val categoryId: Int = if (isSpendingsShown.value!!) {
             categoryIdMapSpending[categoryName]!!
         } else {
             categoryIdMapIncome[categoryName]!!

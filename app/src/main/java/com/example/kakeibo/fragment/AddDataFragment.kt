@@ -68,29 +68,32 @@ class AddDataFragment : Fragment() {
 
         val spinner = view.findViewById<Spinner>(R.id.category_spinner)
         spinner.adapter = adapterSpending
-        vm.isSpendingsShown = true
 
         // 分類ボタン押下時の処理
         val spendingButton = view.findViewById<TextView>(R.id.button_spending)
         val incomeButton = view.findViewById<TextView>(R.id.button_income)
 
-        // TODO isSpendingShownをLiveDataにし、以下の処理をxmlに押し込む
-
+        // TODO XMLを修正し、vm.isSpendingShownが変更するだけで色を切り替えるようにしたい
+        //  ただし、以下のようなコードは機能しなかった
+        //  (isSpendingShownの初期値によっては切り替わったが、値を変更しても見た目が変わらなかった)
+        //  android:textColor="{vm.isSpendingsShown() ? @color/white : @color/purple_500}"
         incomeButton.setOnClickListener {
+            vm.changeCategoryListToSpending()
+            spinner.adapter = adapterIncome
+
             spendingButton.setTextColor(resources.getColor(R.color.purple_500))
             spendingButton.background = resources.getDrawable(R.drawable.income_button)
             incomeButton.setTextColor(resources.getColor(R.color.white));
             incomeButton.background = resources.getDrawable(R.drawable.spending_button)
-            spinner.adapter = adapterIncome
-            vm.isSpendingsShown = false
         }
         spendingButton.setOnClickListener {
+            vm.changeCategoryListToIncome()
+            spinner.adapter = adapterSpending
+
             incomeButton.setTextColor(resources.getColor(R.color.purple_500))
             incomeButton.background = resources.getDrawable(R.drawable.income_button)
             spendingButton.setTextColor(resources.getColor(R.color.white));
             spendingButton.background = resources.getDrawable(R.drawable.spending_button)
-            spinner.adapter = adapterSpending
-            vm.isSpendingsShown = true
         }
 
         // 追加ボタン押下時の処理
