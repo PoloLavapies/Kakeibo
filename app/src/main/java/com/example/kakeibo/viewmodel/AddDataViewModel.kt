@@ -1,19 +1,14 @@
 package com.example.kakeibo.viewmodel
 
 import android.content.Context
-import android.view.View
-import android.widget.EditText
-import android.widget.Spinner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.kakeibo.R
-import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Spending
 import com.example.kakeibo.model.DataModel
 
-class AddDataViewModel(context: Context): ViewModel() {
+class AddDataViewModel(context: Context) : ViewModel() {
 
     class Factory(private val context: Context) : ViewModelProvider.NewInstanceFactory() {
         @Suppress("UNCHECKED_CAST")
@@ -25,17 +20,20 @@ class AddDataViewModel(context: Context): ViewModel() {
     private val dataModel = DataModel(context)
 
     var date: String = ""
+
     // 分類目のリスト
     var categoryNameListSpending = mutableListOf<String>()
     var categoryNameListIncome = mutableListOf<String>()
+
     // 分類名とIDの対応表 選択されたカテゴリ名からIDを取得するために使用する
     private var categoryIdMapSpending = mutableMapOf<String, Int>()
     private var categoryIdMapIncome = mutableMapOf<String, Int>()
+
     // 表示されている分類
     private val _isSpendingsShown = MutableLiveData(true)
     val isSpendingsShown: LiveData<Boolean> get() = _isSpendingsShown
 
-    fun init() {
+    init {
         val categories = dataModel.getAllCategories()
 
         for (category in categories) {

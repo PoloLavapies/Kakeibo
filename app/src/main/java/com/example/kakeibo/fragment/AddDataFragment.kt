@@ -2,28 +2,24 @@ package com.example.kakeibo.fragment
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
-import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.databinding.FragmentAddDataBinding
-import com.example.kakeibo.databinding.FragmentDetailBinding
-import com.example.kakeibo.entity.Spending
 import com.example.kakeibo.viewmodel.AddDataViewModel
-import com.example.kakeibo.viewmodel.DetailViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class AddDataFragment : Fragment() {
     private val args: AddDataFragmentArgs by navArgs()
-    private val vm: AddDataViewModel  by viewModels{
+    private val vm: AddDataViewModel by viewModels {
         AddDataViewModel.Factory(requireContext())
     }
 
@@ -32,10 +28,6 @@ class AddDataFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        //val view: View = inflater.inflate(R.layout.fragment_add_data, container, false)
-
-        vm.init()
-
         // 日付
         if (args.date.isNotEmpty()) {
             vm.date = args.date
@@ -43,7 +35,8 @@ class AddDataFragment : Fragment() {
             vm.date = getDate()
         }
 
-        val binding: FragmentAddDataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_add_data, container, false)
+        val binding: FragmentAddDataBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_add_data, container, false)
         binding.vm = vm
         val view: View = binding.root
 
@@ -54,9 +47,11 @@ class AddDataFragment : Fragment() {
         }
 
         // プルダウンの実装 (分類)
-        val adapterSpending: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
+        val adapterSpending: ArrayAdapter<String> =
+            ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
         adapterSpending.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        val adapterIncome: ArrayAdapter<String> = ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
+        val adapterIncome: ArrayAdapter<String> =
+            ArrayAdapter<String>(requireContext(), android.R.layout.simple_spinner_item)
         adapterIncome.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
         for (category in vm.categoryNameListSpending) {
@@ -99,7 +94,8 @@ class AddDataFragment : Fragment() {
         // 追加ボタン押下時の処理
         val addButton = view.findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
-            val categoryName = view.findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
+            val categoryName =
+                view.findViewById<Spinner>(R.id.category_spinner).selectedItem.toString()
             val money = view.findViewById<EditText>(R.id.money).text.toString().toInt()
             val dateStr = view.findViewById<EditText>(R.id.date).text.toString()
             val detail = view.findViewById<EditText>(R.id.detail).text.toString()
@@ -115,7 +111,8 @@ class AddDataFragment : Fragment() {
     fun showDatePickerDialog(dateEdit: EditText, view: View) {
         val selectedDate: LocalDate = LocalDate.parse(
             view.findViewById<EditText>(R.id.date).text.toString(),
-            DateTimeFormatter.ISO_DATE)
+            DateTimeFormatter.ISO_DATE
+        )
 
         //日付ピッカーダイアログを生成および設定
         DatePickerDialog(
