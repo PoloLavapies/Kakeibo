@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.kakeibo.entity.Category
+import com.example.kakeibo.entity.Spending
 import com.example.kakeibo.model.DataModel
+import java.time.LocalDate
 
 class MainViewModel(context: Context) : ViewModel() {
 
@@ -25,6 +27,27 @@ class MainViewModel(context: Context) : ViewModel() {
 
     private val dataModel = DataModel(context)
 
+    // 前後の月を含む、6週分の日のリストを返す (日曜始まり)
+    fun getDayList(): List<Int> {
+        val firstDayOfMonth: LocalDate = LocalDate.of(year, month, 1)
+        val lastDayOfMonth: LocalDate = firstDayOfMonth.plusMonths(1).minusDays(1)
+
+        var dayList: List<Int> = arrayListOf()
+
+        var date: LocalDate =
+            firstDayOfMonth.minusDays((firstDayOfMonth.dayOfWeek.value % 7).toLong())
+        while (!date.isAfter(lastDayOfMonth)) {
+            dayList += date.dayOfMonth
+            date = date.plusDays(1)
+        }
+        while (dayList.size % 7 != 0) {
+            dayList += date.dayOfMonth
+            date = date.plusDays(1)
+        }
+
+        return dayList
+    }
+
     fun initCategoryList() {
         val categories: List<Category> = dataModel.getAllCategories()
 
@@ -35,5 +58,10 @@ class MainViewModel(context: Context) : ViewModel() {
                 incomeCategoryIds.add(category.id)
             }
         }
+    }
+
+    fun getDataByDate(day: Int): List<Spending> {
+        val date = LocalDate.of(year, month, day).toString()
+        return dataModel.getSpendingData(date)
     }
 }

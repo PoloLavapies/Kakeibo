@@ -27,13 +27,13 @@ class DetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        vm.date = args.date
-        vm.init()
-
         val binding: FragmentDetailBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         binding.vm = vm
         val view: View = binding.root
+        
+        vm.date = args.date
+        vm.init()
 
         val listView: ListView = view.findViewById(R.id.detail_list)
         listView.adapter = DetailViewAdapter(

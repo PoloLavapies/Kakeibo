@@ -28,17 +28,17 @@ class AddDataFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val binding: FragmentAddDataBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_add_data, container, false)
+        binding.vm = vm
+        val view: View = binding.root
+
         // 日付
         if (args.date.isNotEmpty()) {
             vm.date = args.date
         } else {
             vm.date = getDate()
         }
-
-        val binding: FragmentAddDataBinding =
-            DataBindingUtil.inflate(inflater, R.layout.fragment_add_data, container, false)
-        binding.vm = vm
-        val view: View = binding.root
 
         // 日付クリック時の処理
         val dateEdit = view.findViewById<EditText>(R.id.date)

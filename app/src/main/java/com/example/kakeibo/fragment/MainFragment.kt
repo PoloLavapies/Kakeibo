@@ -10,12 +10,13 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.text.buildSpannedString
 import androidx.core.text.color
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
-import com.example.kakeibo.database.KakeiboDatabase
+import com.example.kakeibo.databinding.FragmentMainBinding
 import com.example.kakeibo.viewmodel.MainViewModel
 import com.kal.rackmonthpicker.RackMonthPicker
 import com.kal.rackmonthpicker.listener.DateMonthDialogListener
@@ -26,7 +27,7 @@ import java.util.*
 
 class MainFragment : Fragment() {
     private val args: MainFragmentArgs by navArgs()
-    private val viewModel: MainViewModel by viewModels {
+    private val vm: MainViewModel by viewModels {
         MainViewModel.Factory(requireContext())
     }
 
@@ -35,53 +36,55 @@ class MainFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater.inflate(R.layout.fragment_main, container, false)
+        val binding: FragmentMainBinding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        binding.vm = vm
+        val view: View = binding.root
 
-        viewModel.year = args.year
-        viewModel.month = args.month
+        vm.year = args.year
+        vm.month = args.month
+
+        if (vm.year == 0 && vm.month == 0) {
+            val today = LocalDate.now()
+            vm.year = today.year
+            vm.month = today.monthValue
+        }
 
         val addButton = view.findViewById<Button>(R.id.add_button)
-
         addButton.setOnClickListener {
+            // TODO
             val action = MainFragmentDirections.actionMainToAddData("")
             findNavController().navigate(action)
         }
 
-        val today: LocalDate = LocalDate.now()
-
-        val date = if (viewModel.year != 0 && viewModel.month != 0) {
-            LocalDate.of(viewModel.year, viewModel.month, 1)
-        } else {
-            today
-        }
+        // TODO year・monthに変更があった場合、以下を再度回す
 
         // 年と月の表示
-        setPageTitle(view, date)
+        setPageTitle(view, vm.year, vm.month)
 
         // 表の生成 (日と金額の表示)
-        viewModel.initCategoryList()
-        createTable(date, view)
+        vm.initCategoryList()
+        createTable(view, vm.year, vm.month)
 
         return view
     }
 
-    private fun setPageTitle(view: View, date: LocalDate) {
-        val monthView: TextView = view.findViewById(R.id.month);
-        val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("YYYY年MM月")
-        monthView.text = date.format(formatter)
+    private fun setPageTitle(view: View, year: Int, month: Int) {
+        val monthView: TextView = view.findViewById(R.id.month)
+        monthView.text = year.toString() + "年" + month.toString() + "月"
 
         monthView.setOnClickListener() {
-            showMonthPickerDialog(date)
+            showMonthPickerDialog(year, month)
         }
     }
 
-    private fun showMonthPickerDialog(date: LocalDate) {
+    private fun showMonthPickerDialog(year: Int, month: Int) {
         RackMonthPicker(requireContext())
             // JAPANESEかも
             .setLocale(Locale.ENGLISH)
             // TODO Yearは機能するが、Monthは機能していない (当月が必ず選択される)
-            .setSelectedMonth(date.monthValue)
-            .setSelectedYear(date.year)
+            .setSelectedMonth(month)
+            .setSelectedYear(year)
             .setPositiveButton(DateMonthDialogListener
             { month, startDate, endDate, year, monthLabel ->
                 // TODO 同じ画面での遷移なので、viewModelやliveDataなどで対応したい
@@ -95,14 +98,14 @@ class MainFragment : Fragment() {
             .show()
     }
 
-    private fun createTable(date: LocalDate, view: View) {
+    private fun createTable(view: View, year: Int, month: Int) {
         // ループ内で処理している週が当月であるかを示すフラグ
-        var thisMonthFlag: Boolean = false
-        val dayList: List<Int> = getDayList(date)
+        var thisMonthFlag = false
+        val dayList: List<Int> = vm.getDayList()
         for (i in 0 until dayList.size / 7) {
             for (j in 0..6) {
-                val dayOfMonth = dayList.get(i * 7 + j)
-                if (dayOfMonth == 1) {
+                val day = dayList.get(i * 7 + j)
+                if (day == 1) {
                     thisMonthFlag = !thisMonthFlag
                 }
 
@@ -111,6 +114,7 @@ class MainFragment : Fragment() {
                 val dateView: TextView = view.findViewById(textViewId)
                 dateView.text = dayList.get(i * 7 + j).toString()
 
+                // 当月の日の場合、タップ可能にする
                 if (thisMonthFlag) {
                     val buttonId = resources.getIdentifier(
                         "button${i}_${j}",
@@ -118,10 +122,11 @@ class MainFragment : Fragment() {
                         requireContext().packageName
                     )
                     val button: Button = view.findViewById(buttonId)
-                    val date: LocalDate = date.withDayOfMonth(dayOfMonth)
-                    button.text = getSpentMoneyText(date)
+                    button.text = getSpentMoneyText(day)
                     button.setOnClickListener {
-                        val dateIsoFormat: String = date.format(DateTimeFormatter.ISO_DATE)
+                        // TODO DataModelまでyear, month, valueで渡すようにしたい
+                        val dateIsoFormat: String =
+                            LocalDate.of(year, month, day).format(DateTimeFormatter.ISO_DATE)
                         val action = MainFragmentDirections.actionMainToDetail(dateIsoFormat)
                         findNavController().navigate(action)
                     }
@@ -132,39 +137,15 @@ class MainFragment : Fragment() {
         }
     }
 
-    // 前後の月を含む、6週分の日のリストを返す (日曜始まり)
-    private fun getDayList(dayOfThisMonth: LocalDate): List<Int> {
-        val firstDayOfMonth: LocalDate = LocalDate.of(dayOfThisMonth.year, dayOfThisMonth.month, 1)
-        val lastDayOfMonth: LocalDate = firstDayOfMonth.plusMonths(1).minusDays(1)
-
-        var dayList: List<Int> = arrayListOf()
-
-        var date: LocalDate =
-            firstDayOfMonth.minusDays((firstDayOfMonth.dayOfWeek.value % 7).toLong())
-        while (!date.isAfter(lastDayOfMonth)) {
-            dayList += date.dayOfMonth
-            date = date.plusDays(1)
-        }
-        while (dayList.size % 7 != 0) {
-            dayList += date.dayOfMonth
-            date = date.plusDays(1)
-        }
-
-        return dayList
-    }
-
-    // TODO DBとの通信回数を減らしたい。一度の通信でクラス変数などにデータを格納しておく?
-    private fun getSpentMoneyText(date: LocalDate): SpannedString {
-        val dateString: String = date.toString()
-
-        val db = KakeiboDatabase.getInstance(requireContext())
-
+    // TODO DBとの通信回数を減らしたい。その月の全データを取得してViewModelで保持し、必要な日のデータだけ取得するのはどうか?
+    // TODO そもそもViewModelに書くべきか?
+    private fun getSpentMoneyText(day: Int): SpannedString {
         // カテゴリ
-        var spendingTotal: Int = 0
-        var incomeTotal: Int = 0
+        var spendingTotal = 0
+        var incomeTotal = 0
 
-        for (spending in db.spendingDao().getByDate(dateString)) {
-            if (spending.categoryId in viewModel.spendingCategoryIds) {
+        for (spending in vm.getDataByDate(day)) {
+            if (spending.categoryId in vm.spendingCategoryIds) {
                 spendingTotal += spending.money
             } else {
                 incomeTotal += spending.money
