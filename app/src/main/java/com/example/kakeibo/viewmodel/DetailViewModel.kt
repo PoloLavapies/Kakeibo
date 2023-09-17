@@ -22,13 +22,15 @@ class DetailViewModel(context: Context) : ViewModel() {
 
     private val dataModel = DataModel(context)
 
-    var date: String = ""
+    var year: Int = 0
+    var month: Int = 0
+    var day: Int = 0
     var noDataTextVisible: Boolean = true
     lateinit var spendings: List<Spending>
     lateinit var spendingMapList: MutableList<MutableMap<String, Any>>
 
     fun init() {
-        spendings = dataModel.getSpendingData(date)
+        spendings = dataModel.getSpendingData(year, month, day)
         if (spendings.isNotEmpty()) {
             noDataTextVisible = false
         }
@@ -59,6 +61,10 @@ class DetailViewModel(context: Context) : ViewModel() {
                 )
             )
         }
+    }
+
+    fun getDate(): String {
+        return "${year}年${month}月${day}日"
     }
 
     fun deleteSpendingData(id: Int) {

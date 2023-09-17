@@ -61,7 +61,6 @@ class MainViewModel(context: Context) : ViewModel() {
     }
 
     fun getDataByDate(day: Int): List<Spending> {
-        val date = LocalDate.of(year, month, day).toString()
-        return dataModel.getSpendingData(date)
+        return dataModel.getSpendingData(year, month, day)
     }
 }

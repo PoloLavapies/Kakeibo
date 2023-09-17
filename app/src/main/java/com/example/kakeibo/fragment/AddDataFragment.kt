@@ -34,11 +34,9 @@ class AddDataFragment : Fragment() {
         val view: View = binding.root
 
         // 日付
-        if (args.date.isNotEmpty()) {
-            vm.date = args.date
-        } else {
-            vm.date = getDate()
-        }
+        vm.year = args.year
+        vm.month = args.month
+        vm.day = args.day
 
         // 日付クリック時の処理
         val dateEdit = view.findViewById<EditText>(R.id.date)
@@ -73,7 +71,7 @@ class AddDataFragment : Fragment() {
         //  (isSpendingShownの初期値によっては切り替わったが、値を変更しても見た目が変わらなかった)
         //  android:textColor="{vm.isSpendingsShown() ? @color/white : @color/purple_500}"
         incomeButton.setOnClickListener {
-            vm.changeCategoryListToSpending()
+            vm.changeCategoryListToIncome()
             spinner.adapter = adapterIncome
 
             spendingButton.setTextColor(resources.getColor(R.color.purple_500))
@@ -82,7 +80,7 @@ class AddDataFragment : Fragment() {
             incomeButton.background = resources.getDrawable(R.drawable.spending_button)
         }
         spendingButton.setOnClickListener {
-            vm.changeCategoryListToIncome()
+            vm.changeCategoryListToSpending()
             spinner.adapter = adapterSpending
 
             incomeButton.setTextColor(resources.getColor(R.color.purple_500))
@@ -128,10 +126,5 @@ class AddDataFragment : Fragment() {
             selectedDate.dayOfMonth
         ).apply {
         }.show()
-    }
-
-    private fun getDate(): String {
-        val date: LocalDate = LocalDate.now()
-        return date.format(DateTimeFormatter.ISO_DATE)
     }
 }

@@ -19,7 +19,9 @@ class AddDataViewModel(context: Context) : ViewModel() {
 
     private val dataModel = DataModel(context)
 
-    var date: String = ""
+    var year: Int = 0
+    var month: Int = 0
+    var day: Int = 0
 
     // 分類目のリスト
     var categoryNameListSpending = mutableListOf<String>()
@@ -53,6 +55,12 @@ class AddDataViewModel(context: Context) : ViewModel() {
 
     fun changeCategoryListToIncome() {
         _isSpendingsShown.value = false
+    }
+
+    fun getDate(): String {
+        val monthPadding = "%02d".format(month)
+        val dayPadding = "%02d".format(day)
+        return "${year}-${monthPadding}-${dayPadding}"
     }
 
     fun addData(categoryName: String, money: Int, dateStr: String, detail: String) {

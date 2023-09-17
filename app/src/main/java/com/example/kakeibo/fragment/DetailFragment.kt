@@ -31,8 +31,10 @@ class DetailFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         binding.vm = vm
         val view: View = binding.root
-        
-        vm.date = args.date
+
+        vm.year = args.year
+        vm.month = args.month
+        vm.day = args.day
         vm.init()
 
         val listView: ListView = view.findViewById(R.id.detail_list)
@@ -47,7 +49,7 @@ class DetailFragment : Fragment() {
 
         val addButton = view.findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
-            val action = DetailFragmentDirections.actionDetailToAddData(vm.date)
+            val action = DetailFragmentDirections.actionDetailToAddData(vm.year, vm.month, vm.day)
             findNavController().navigate(action)
         }
 
@@ -55,7 +57,6 @@ class DetailFragment : Fragment() {
     }
 
     fun deleteSpendingData(id: Int) {
-        // TODO ViewModel経由で削除するのは微妙な気もする
         vm.deleteSpendingData(id)
     }
 }

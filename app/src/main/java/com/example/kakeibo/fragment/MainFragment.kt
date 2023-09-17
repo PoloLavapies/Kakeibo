@@ -22,7 +22,6 @@ import com.kal.rackmonthpicker.RackMonthPicker
 import com.kal.rackmonthpicker.listener.DateMonthDialogListener
 import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MainFragment : Fragment() {
@@ -44,16 +43,16 @@ class MainFragment : Fragment() {
         vm.year = args.year
         vm.month = args.month
 
+        val today = LocalDate.now()
         if (vm.year == 0 && vm.month == 0) {
-            val today = LocalDate.now()
             vm.year = today.year
             vm.month = today.monthValue
         }
 
         val addButton = view.findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
-            // TODO
-            val action = MainFragmentDirections.actionMainToAddData("")
+            val action =
+                MainFragmentDirections.actionMainToAddData(vm.year, vm.month, today.dayOfMonth)
             findNavController().navigate(action)
         }
 
@@ -125,9 +124,8 @@ class MainFragment : Fragment() {
                     button.text = getSpentMoneyText(day)
                     button.setOnClickListener {
                         // TODO DataModelまでyear, month, valueで渡すようにしたい
-                        val dateIsoFormat: String =
-                            LocalDate.of(year, month, day).format(DateTimeFormatter.ISO_DATE)
-                        val action = MainFragmentDirections.actionMainToDetail(dateIsoFormat)
+                        val action =
+                            MainFragmentDirections.actionMainToDetail(vm.year, vm.month, day)
                         findNavController().navigate(action)
                     }
                 } else {

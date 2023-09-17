@@ -4,6 +4,8 @@ import android.content.Context
 import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Category
 import com.example.kakeibo.entity.Spending
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class DataModel(context: Context) {
 
@@ -22,7 +24,8 @@ class DataModel(context: Context) {
         return db.categoryDao().isSpending(id)
     }
 
-    fun getSpendingData(date: String): List<Spending> {
+    fun getSpendingData(year: Int, month: Int, day: Int): List<Spending> {
+        val date = LocalDate.of(year, month, day).format(DateTimeFormatter.ISO_DATE)
         return db.spendingDao().getByDate(date)
     }
 

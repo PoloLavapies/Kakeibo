@@ -2,14 +2,15 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="android.view.View"/>
+
+        <import type="android.view.View" />
+
         <variable
             name="vm"
-            type="com.example.kakeibo.viewmodel.AddDataViewModel"/>
+            type="com.example.kakeibo.viewmodel.AddDataViewModel" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -27,7 +28,7 @@
             android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{vm.date}"
+            android:text="@{vm.getDate()}"
             android:inputType="text"
             android:layout_marginStart="5dp"
             android:focusableInTouchMode="false"
@@ -100,7 +101,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/yen"
             app:layout_constraintTop_toBottomOf="@id/money_text"
-            app:layout_constraintHorizontal_weight="5"/>
+            app:layout_constraintHorizontal_weight="5" />
 
         <TextView
             android:id="@+id/yen"
@@ -112,7 +113,7 @@
             app:layout_constraintStart_toEndOf="@+id/money"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/money"
-            app:layout_constraintHorizontal_weight="1"/>
+            app:layout_constraintHorizontal_weight="1" />
 
         <TextView
             android:id="@+id/detail_text"
