@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace 'com.example.kakeibo'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.example.kakeibo"
         minSdk 26
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -51,6 +51,11 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.0"
 
+    // coroutine
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.2"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-alpha02"
+
     // viewModel・liveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
@@ -58,9 +63,9 @@ dependencies {
     implementation "androidx.fragment:fragment-ktx:1.4.1"
 
     // room
-    implementation 'androidx.room:room-runtime:2.2.2'
-    implementation 'androidx.room:room-ktx:2.2.2'
-    kapt 'androidx.room:room-compiler:2.2.2'
+    implementation 'androidx.room:room-runtime:2.5.2'
+    implementation 'androidx.room:room-ktx:2.5.2'
+    kapt 'androidx.room:room-compiler:2.5.2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

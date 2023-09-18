@@ -33,7 +33,7 @@ class DataModel(context: Context) {
         db.spendingDao().insert(spending)
     }
 
-    fun deleteSpendingData(id: Int) {
+    suspend fun deleteSpendingData(id: Int) {
         return db.spendingDao().deleteById(id)
     }
 }

@@ -11,6 +11,10 @@ import android.widget.SimpleAdapter
 import android.widget.TextView
 import com.example.kakeibo.R
 import com.example.kakeibo.fragment.DetailFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailViewAdapter : SimpleAdapter {
     private var context: Context? = null
@@ -18,7 +22,14 @@ class DetailViewAdapter : SimpleAdapter {
     private var inflater: LayoutInflater
     private var list: MutableList<MutableMap<String, Any>>
 
-    constructor(context: Context, fragment: DetailFragment, list: MutableList<MutableMap<String, Any>>, layout :Int, from :Array<String>, to :IntArray)
+    constructor(
+        context: Context,
+        fragment: DetailFragment,
+        list: MutableList<MutableMap<String, Any>>,
+        layout: Int,
+        from: Array<String>,
+        to: IntArray
+    )
             : super(context, list, layout, from, to) {
         this.context = context
         this.fragment = fragment
@@ -39,14 +50,18 @@ class DetailViewAdapter : SimpleAdapter {
 
         // 削除ボタン
         val button = view.findViewById<TextView>(R.id.delete_button)
-        button. setOnClickListener() {
+        button.setOnClickListener() {
             val spendingId: Int = list[position]["spendingId"] as Int
 
             val builder: AlertDialog.Builder = AlertDialog.Builder(context)
             builder.setTitle("確認")
                 .setMessage("選択されたデータを削除します。")
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
-                    fragment?.deleteSpendingData(spendingId)
+                    GlobalScope.launch {
+                        withContext(Dispatchers.IO) {
+                            fragment?.deleteSpendingData(spendingId)
+                        }
+                    }
                     list.removeAt(position)
                     this.notifyDataSetChanged()
                 })

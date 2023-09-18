@@ -56,7 +56,7 @@ class DetailFragment : Fragment() {
         return view
     }
 
-    fun deleteSpendingData(id: Int) {
+    suspend fun deleteSpendingData(id: Int) {
         vm.deleteSpendingData(id)
     }
 }

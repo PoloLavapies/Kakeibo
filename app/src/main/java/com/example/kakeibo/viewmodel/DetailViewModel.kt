@@ -26,8 +26,8 @@ class DetailViewModel(context: Context) : ViewModel() {
     var month: Int = 0
     var day: Int = 0
     var noDataTextVisible: Boolean = true
+    var spendingMapList: MutableList<MutableMap<String, Any>> = mutableListOf()
     lateinit var spendings: List<Spending>
-    lateinit var spendingMapList: MutableList<MutableMap<String, Any>>
 
     fun init() {
         spendings = dataModel.getSpendingData(year, month, day)
@@ -35,11 +35,11 @@ class DetailViewModel(context: Context) : ViewModel() {
             noDataTextVisible = false
         }
 
-        spendingMapList = mutableListOf()
         for (spending: Spending in spendings) {
-            // TODO このメソッドを毎回呼び出さず、IDと分類名の対応表をメモリに載せておく実装もアリ?
+            // TODO このメソッドを毎回呼び出さず、IDと分類名の対応表をメモリに載せて処理する
             val category: String = dataModel.getCategoryName(spending.categoryId)
             val money: SpannedString = buildSpannedString {
+                // TODO ここもDB呼び出しをしない
                 if (dataModel.isSpending(spending.categoryId)) {
                     color(Color.RED) {
                         append("-${"%,d".format(spending.money)}円")
@@ -67,7 +67,7 @@ class DetailViewModel(context: Context) : ViewModel() {
         return "${year}年${month}月${day}日"
     }
 
-    fun deleteSpendingData(id: Int) {
+    suspend fun deleteSpendingData(id: Int) {
         dataModel.deleteSpendingData(id)
     }
 }

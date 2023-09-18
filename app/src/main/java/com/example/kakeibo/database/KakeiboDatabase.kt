@@ -23,13 +23,13 @@ abstract class KakeiboDatabase : RoomDatabase() {
         fun getInstance(context: Context): KakeiboDatabase {
             synchronized(lock) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.applicationContext,
-                        KakeiboDatabase::class.java, "Kakeibo.db")
-                        // TODO 調査
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        KakeiboDatabase::class.java, "Kakeibo.db"
+                    )
+                        // メインスレッドでのDBのアクセスを許可する
                         .allowMainThreadQueries()
                         .addCallback(object : RoomDatabase.Callback() {
-                            // TODO ほかの書き方も調査。
-                            //  動いてはいるがエディターで赤線が引かれているのは気になる。SQLベタ書きも良くない
                             override fun onCreate(db: SupportSQLiteDatabase) {
                                 super.onCreate(db)
                                 val sql = "INSERT INTO 'category' VALUES " +
