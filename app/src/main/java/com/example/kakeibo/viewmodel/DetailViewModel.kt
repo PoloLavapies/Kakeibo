@@ -26,8 +26,8 @@ class DetailViewModel(context: Context) : ViewModel() {
     var month: Int = 0
     var day: Int = 0
     var noDataTextVisible: Boolean = true
-    var spendingMapList: MutableList<MutableMap<String, Any>> = mutableListOf()
     lateinit var spendings: List<Spending>
+    lateinit var spendingMapList: MutableList<MutableMap<String, Any>>
 
     fun init() {
         spendings = dataModel.getSpendingData(year, month, day)
@@ -35,6 +35,7 @@ class DetailViewModel(context: Context) : ViewModel() {
             noDataTextVisible = false
         }
 
+        spendingMapList = mutableListOf()
         for (spending: Spending in spendings) {
             // TODO このメソッドを毎回呼び出さず、IDと分類名の対応表をメモリに載せて処理する
             val category: String = dataModel.getCategoryName(spending.categoryId)
