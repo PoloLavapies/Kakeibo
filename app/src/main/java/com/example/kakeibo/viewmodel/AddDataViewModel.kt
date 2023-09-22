@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.kakeibo.database.DatabaseModel
 import com.example.kakeibo.entity.Spending
-import com.example.kakeibo.model.DataModel
 
 class AddDataViewModel(context: Context) : ViewModel() {
 
@@ -17,7 +17,7 @@ class AddDataViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private val dataModel = DataModel(context)
+    private val dbModel = DatabaseModel(context)
 
     var year: Int = 0
     var month: Int = 0
@@ -36,7 +36,7 @@ class AddDataViewModel(context: Context) : ViewModel() {
     val isSpendingsShown: LiveData<Boolean> get() = _isSpendingsShown
 
     init {
-        val categories = dataModel.getAllCategories()
+        val categories = dbModel.getAllCategories()
 
         for (category in categories) {
             if (category.isSpending) {
@@ -71,6 +71,6 @@ class AddDataViewModel(context: Context) : ViewModel() {
         }
         val spending = Spending(0, categoryId, money, dateStr, detail)
 
-        dataModel.addSpendingData(spending)
+        dbModel.addSpendingData(spending)
     }
 }

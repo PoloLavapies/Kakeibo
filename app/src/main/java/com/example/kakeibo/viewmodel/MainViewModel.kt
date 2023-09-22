@@ -3,9 +3,9 @@ package com.example.kakeibo.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.kakeibo.database.DatabaseModel
 import com.example.kakeibo.entity.Category
 import com.example.kakeibo.entity.Spending
-import com.example.kakeibo.model.DataModel
 import java.time.LocalDate
 
 class MainViewModel(context: Context) : ViewModel() {
@@ -25,7 +25,7 @@ class MainViewModel(context: Context) : ViewModel() {
     var spendingCategoryIds = mutableListOf<Int>()
     var incomeCategoryIds = mutableListOf<Int>()
 
-    private val dataModel = DataModel(context)
+    private val dbModel = DatabaseModel(context)
 
     // 前後の月を含む、6週分の日のリストを返す (日曜始まり)
     fun getDayList(): List<Int> {
@@ -49,7 +49,7 @@ class MainViewModel(context: Context) : ViewModel() {
     }
 
     fun initCategoryList() {
-        val categories: List<Category> = dataModel.getAllCategories()
+        val categories: List<Category> = dbModel.getAllCategories()
 
         for (category in categories) {
             if (category.isSpending) {
@@ -61,6 +61,6 @@ class MainViewModel(context: Context) : ViewModel() {
     }
 
     fun getDataByDate(day: Int): List<Spending> {
-        return dataModel.getSpendingData(year, month, day)
+        return dbModel.getSpendingData(year, month, day)
     }
 }

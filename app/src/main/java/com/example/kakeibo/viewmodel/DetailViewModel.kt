@@ -7,9 +7,8 @@ import androidx.core.text.buildSpannedString
 import androidx.core.text.color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-
+import com.example.kakeibo.database.DatabaseModel
 import com.example.kakeibo.entity.Spending
-import com.example.kakeibo.model.DataModel
 
 class DetailViewModel(context: Context) : ViewModel() {
 
@@ -20,7 +19,7 @@ class DetailViewModel(context: Context) : ViewModel() {
         }
     }
 
-    private val dataModel = DataModel(context)
+    private val dbModel = DatabaseModel(context)
 
     var year: Int = 0
     var month: Int = 0
@@ -30,7 +29,7 @@ class DetailViewModel(context: Context) : ViewModel() {
     lateinit var spendingMapList: MutableList<MutableMap<String, Any>>
 
     fun init() {
-        spendings = dataModel.getSpendingData(year, month, day)
+        spendings = dbModel.getSpendingData(year, month, day)
         if (spendings.isNotEmpty()) {
             noDataTextVisible = false
         }
@@ -38,10 +37,10 @@ class DetailViewModel(context: Context) : ViewModel() {
         spendingMapList = mutableListOf()
         for (spending: Spending in spendings) {
             // TODO このメソッドを毎回呼び出さず、IDと分類名の対応表をメモリに載せて処理する
-            val category: String = dataModel.getCategoryName(spending.categoryId)
+            val category: String = dbModel.getCategoryName(spending.categoryId)
             val money: SpannedString = buildSpannedString {
                 // TODO ここもDB呼び出しをしない
-                if (dataModel.isSpending(spending.categoryId)) {
+                if (dbModel.isSpending(spending.categoryId)) {
                     color(Color.RED) {
                         append("-${"%,d".format(spending.money)}円")
                     }
@@ -69,6 +68,6 @@ class DetailViewModel(context: Context) : ViewModel() {
     }
 
     suspend fun deleteSpendingData(id: Int) {
-        dataModel.deleteSpendingData(id)
+        dbModel.deleteSpendingData(id)
     }
 }

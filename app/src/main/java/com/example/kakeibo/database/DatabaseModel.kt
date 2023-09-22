@@ -1,13 +1,12 @@
-package com.example.kakeibo.model
+package com.example.kakeibo.database
 
 import android.content.Context
-import com.example.kakeibo.database.KakeiboDatabase
 import com.example.kakeibo.entity.Category
 import com.example.kakeibo.entity.Spending
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-class DataModel(context: Context) {
+class DatabaseModel(context: Context) {
 
     val db = KakeiboDatabase.getInstance(context)
 

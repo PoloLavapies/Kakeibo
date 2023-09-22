@@ -123,7 +123,7 @@ class MainFragment : Fragment() {
                     val button: Button = view.findViewById(buttonId)
                     button.text = getSpentMoneyText(day)
                     button.setOnClickListener {
-                        // TODO DataModelまでyear, month, valueで渡すようにしたい
+                        // TODO DatabaseModelまでyear, month, valueで渡すようにしたい
                         val action =
                             MainFragmentDirections.actionMainToDetail(vm.year, vm.month, day)
                         findNavController().navigate(action)
