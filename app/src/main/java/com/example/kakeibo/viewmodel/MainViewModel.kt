@@ -1,6 +1,7 @@
 package com.example.kakeibo.viewmodel
 
 import android.content.Context
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.kakeibo.database.DatabaseModel
@@ -18,8 +19,7 @@ class MainViewModel(context: Context) : ViewModel() {
     }
 
     // 表示対象の月
-    var year: Int = 0
-    var month: Int = 0
+    val date = MutableLiveData<LocalDate>(null)
 
     // 分類名とIDの対応表 選択されたカテゴリ名からIDを取得するために使用する
     var spendingCategoryIds = mutableListOf<Int>()
@@ -29,7 +29,7 @@ class MainViewModel(context: Context) : ViewModel() {
 
     // 前後の月を含む、6週分の日のリストを返す (日曜始まり)
     fun getDayList(): List<Int> {
-        val firstDayOfMonth: LocalDate = LocalDate.of(year, month, 1)
+        val firstDayOfMonth: LocalDate = LocalDate.of(date.value!!.year, date.value!!.month, 1)
         val lastDayOfMonth: LocalDate = firstDayOfMonth.plusMonths(1).minusDays(1)
 
         var dayList: List<Int> = arrayListOf()
@@ -60,7 +60,8 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
+    // TODO 事前に当月のデータをメモリに載せておき、該当の日のデータを返す方が軽くなる?
     fun getDataByDate(day: Int): List<Spending> {
-        return dbModel.getSpendingData(year, month, day)
+        return dbModel.getSpendingData(date.value!!.year, date.value!!.monthValue, day)
     }
 }

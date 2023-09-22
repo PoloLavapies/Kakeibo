@@ -11,9 +11,6 @@
         android:label="main_fragment"
         tools:layout="@layout/fragment_main">
         <action
-            android:id="@+id/action_main_to_main"
-            app:destination="@id/MainFragment" />
-        <action
             android:id="@+id/action_main_to_add_data"
             app:destination="@id/AddDataFragment" />
         <action

@@ -14,18 +14,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.kakeibo.R
 import com.example.kakeibo.databinding.FragmentMainBinding
 import com.example.kakeibo.viewmodel.MainViewModel
 import com.kal.rackmonthpicker.RackMonthPicker
-import com.kal.rackmonthpicker.listener.DateMonthDialogListener
 import com.kal.rackmonthpicker.listener.OnCancelMonthDialogListener
 import java.time.LocalDate
 import java.util.*
 
 class MainFragment : Fragment() {
-    private val args: MainFragmentArgs by navArgs()
     private val vm: MainViewModel by viewModels {
         MainViewModel.Factory(requireContext())
     }
@@ -40,30 +37,32 @@ class MainFragment : Fragment() {
         binding.vm = vm
         val view: View = binding.root
 
-        vm.year = args.year
-        vm.month = args.month
+        vm.date.observe(viewLifecycleOwner) {
+            // 年と月の表示
+            setPageTitle(view, vm.date.value!!.year, vm.date.value!!.monthValue)
 
-        val today = LocalDate.now()
-        if (vm.year == 0 && vm.month == 0) {
-            vm.year = today.year
-            vm.month = today.monthValue
+            // 表の生成 (日と金額の表示)
+            vm.initCategoryList()
+            createTable(view, vm.date.value!!.year, vm.date.value!!.monthValue)
         }
 
+        // 表示する月の設定 (起動時のみ実行される)
+        val today = LocalDate.now()
+        if (vm.date.value == null) {
+            vm.date.value = today
+        }
+
+        // 右下の追加ボタンをタップした場合、入力される日付のデフォルト値は当日
         val addButton = view.findViewById<Button>(R.id.add_button)
         addButton.setOnClickListener {
             val action =
-                MainFragmentDirections.actionMainToAddData(vm.year, vm.month, today.dayOfMonth)
+                MainFragmentDirections.actionMainToAddData(
+                    today.year,
+                    today.monthValue,
+                    today.dayOfMonth
+                )
             findNavController().navigate(action)
         }
-
-        // TODO year・monthに変更があった場合、以下を再度回す
-
-        // 年と月の表示
-        setPageTitle(view, vm.year, vm.month)
-
-        // 表の生成 (日と金額の表示)
-        vm.initCategoryList()
-        createTable(view, vm.year, vm.month)
 
         return view
     }
@@ -79,17 +78,13 @@ class MainFragment : Fragment() {
 
     private fun showMonthPickerDialog(year: Int, month: Int) {
         RackMonthPicker(requireContext())
-            // JAPANESEかも
             .setLocale(Locale.ENGLISH)
             // TODO Yearは機能するが、Monthは機能していない (当月が必ず選択される)
             .setSelectedMonth(month)
             .setSelectedYear(year)
-            .setPositiveButton(DateMonthDialogListener
-            { month, startDate, endDate, year, monthLabel ->
-                // TODO 同じ画面での遷移なので、viewModelやliveDataなどで対応したい
-                val action = MainFragmentDirections.actionMainToMain(year, month)
-                findNavController().navigate(action)
-            })
+            .setPositiveButton { month, _, _, year, _ ->
+                vm.date.value = LocalDate.of(year, month, 1)
+            }
             .setNegativeButton(OnCancelMonthDialogListener
             { dialog ->
                 dialog.dismiss()
@@ -111,7 +106,7 @@ class MainFragment : Fragment() {
                 val textViewId =
                     resources.getIdentifier("date${i}_${j}", "id", requireContext().packageName)
                 val dateView: TextView = view.findViewById(textViewId)
-                dateView.text = dayList.get(i * 7 + j).toString()
+                dateView.text = dayList[i * 7 + j].toString()
 
                 // 当月の日の場合、タップ可能にする
                 if (thisMonthFlag) {
@@ -123,9 +118,12 @@ class MainFragment : Fragment() {
                     val button: Button = view.findViewById(buttonId)
                     button.text = getSpentMoneyText(day)
                     button.setOnClickListener {
-                        // TODO DatabaseModelまでyear, month, valueで渡すようにしたい
                         val action =
-                            MainFragmentDirections.actionMainToDetail(vm.year, vm.month, day)
+                            MainFragmentDirections.actionMainToDetail(
+                                vm.date.value!!.year,
+                                vm.date.value!!.monthValue,
+                                day
+                            )
                         findNavController().navigate(action)
                     }
                 } else {
