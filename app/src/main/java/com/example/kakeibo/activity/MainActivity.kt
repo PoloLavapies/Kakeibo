@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        
+
         val toolBar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolBar)
 
@@ -43,8 +43,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_home -> findNavController(R.id.nav_host_fragment).navigate(R.id.MainFragment)
-            // TODO Fragmentとviewを作成
-            R.id.menu_setting -> println("カテゴリー設定画面へ遷移します")
+            R.id.menu_setting -> findNavController(R.id.nav_host_fragment).navigate(R.id.CategoryFragment)
         }
         val drawer = findViewById<View>(R.id.drawer_layout) as DrawerLayout
         drawer.closeDrawer(GravityCompat.START)

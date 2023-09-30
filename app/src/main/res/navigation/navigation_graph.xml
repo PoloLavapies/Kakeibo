@@ -58,4 +58,10 @@
             android:name="day"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/CategoryFragment"
+        android:name="com.example.kakeibo.fragment.CategoryFragment"
+        android:label="category_fragment"
+        tools:layout="@layout/fragment_category" />
 </navigation>
