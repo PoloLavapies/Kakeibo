@@ -16,12 +16,6 @@
         <action
             android:id="@+id/action_main_to_detail"
             app:destination="@id/DetailFragment" />
-        <argument
-            android:name="year"
-            app:argType="integer" />
-        <argument
-            android:name="month"
-            app:argType="integer" />
     </fragment>
 
     <fragment
