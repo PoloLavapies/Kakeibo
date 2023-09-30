@@ -2,19 +2,16 @@ package com.example.kakeibo.activity
 
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentTransaction
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.setupWithNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
 import com.example.kakeibo.R
-import com.example.kakeibo.fragment.AddDataFragment
-import com.example.kakeibo.fragment.MainFragment
-import com.example.kakeibo.fragment.MainFragmentArgs
 import java.util.*
-
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,7 +24,12 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolBar)
 
         val navController = findNavController(R.id.nav_host_fragment)
-        val args = MainFragmentArgs(0, 0)
-        navController.setGraph(R.navigation.navigation_graph, args.toBundle())
+        navController.setGraph(R.navigation.navigation_graph)
+
+        val appBarConfiguration = AppBarConfiguration.Builder(navController.graph)
+            .setOpenableLayout(findViewById<View>(R.id.drawer_layout) as DrawerLayout)
+            .build()
+
+        NavigationUI.setupWithNavController(toolBar, navController, appBarConfiguration)
     }
 }
