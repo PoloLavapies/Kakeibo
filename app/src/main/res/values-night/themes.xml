@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.Kakeibo" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
@@ -11,5 +11,11 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <!-- Navigation Drawer -->
+        <item name="drawerArrowStyle">@style/DrawerArrow</item>
+    </style>
+
+    <style name="DrawerArrow" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/black</item>
     </style>
 </resources>
