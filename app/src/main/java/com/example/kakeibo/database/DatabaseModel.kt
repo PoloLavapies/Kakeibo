@@ -11,16 +11,12 @@ class DatabaseModel(context: Context) {
     val db = KakeiboDatabase.getInstance(context)
 
 
-    fun getCategoryName(id: Int): String {
-        return db.categoryDao().getCategoryName(id)
+    fun getCategory(id: Int): Category {
+        return db.categoryDao().getCategory(id)
     }
 
     fun getAllCategories(): List<Category> {
         return db.categoryDao().getAll()
-    }
-
-    fun isSpending(id: Int): Boolean {
-        return db.categoryDao().isSpending(id)
     }
 
     fun getSpendingData(year: Int, month: Int, day: Int): List<Spending> {

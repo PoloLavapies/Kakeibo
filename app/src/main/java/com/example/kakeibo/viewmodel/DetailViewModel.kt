@@ -8,6 +8,7 @@ import androidx.core.text.color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.kakeibo.database.DatabaseModel
+import com.example.kakeibo.entity.Category
 import com.example.kakeibo.entity.Spending
 
 class DetailViewModel(context: Context) : ViewModel() {
@@ -36,11 +37,9 @@ class DetailViewModel(context: Context) : ViewModel() {
 
         spendingMapList = mutableListOf()
         for (spending: Spending in spendings) {
-            // TODO このメソッドを毎回呼び出さず、IDと分類名の対応表をメモリに載せて処理する
-            val category: String = dbModel.getCategoryName(spending.categoryId)
+            val category: Category = dbModel.getCategory(spending.categoryId)
             val money: SpannedString = buildSpannedString {
-                // TODO ここもDB呼び出しをしない
-                if (dbModel.isSpending(spending.categoryId)) {
+                if (category.isSpending) {
                     color(Color.RED) {
                         append("-${"%,d".format(spending.money)}円")
                     }
@@ -55,7 +54,7 @@ class DetailViewModel(context: Context) : ViewModel() {
             spendingMapList.add(
                 mutableMapOf(
                     "money" to money,
-                    "detail" to if (detail == "") "分類:${category}" else "分類:${category} 詳細:${detail}",
+                    "detail" to if (detail == "") "分類:${category.name}" else "分類:${category.name} 詳細:${detail}",
                     // 以下の要素は表示はしない
                     "spendingId" to spending.id
                 )

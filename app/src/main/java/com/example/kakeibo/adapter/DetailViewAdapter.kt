@@ -2,7 +2,6 @@ package com.example.kakeibo.adapter
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.text.SpannedString
 import android.view.LayoutInflater
 import android.view.View
@@ -50,13 +49,13 @@ class DetailViewAdapter : SimpleAdapter {
 
         // 削除ボタン
         val button = view.findViewById<TextView>(R.id.delete_button)
-        button.setOnClickListener() {
+        button.setOnClickListener {
             val spendingId: Int = list[position]["spendingId"] as Int
 
             val builder: AlertDialog.Builder = AlertDialog.Builder(context)
             builder.setTitle("確認")
                 .setMessage("選択されたデータを削除します。")
-                .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, id ->
+                .setPositiveButton("OK") { dialog, id ->
                     GlobalScope.launch {
                         withContext(Dispatchers.IO) {
                             fragment?.deleteSpendingData(spendingId)
@@ -64,7 +63,7 @@ class DetailViewAdapter : SimpleAdapter {
                     }
                     list.removeAt(position)
                     this.notifyDataSetChanged()
-                })
+                }
                 .setNegativeButton("キャンセル", null)
             builder.create().show()
         }
