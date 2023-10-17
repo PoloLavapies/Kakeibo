@@ -97,8 +97,11 @@ class AddDataFragment : Fragment() {
             val money = view.findViewById<EditText>(R.id.money).text.toString().toInt()
             val dateStr = view.findViewById<EditText>(R.id.date).text.toString()
             val detail = view.findViewById<EditText>(R.id.detail).text.toString()
+            // TODO ここでDBViewModelのisProcessingをtrueにする
             vm.addData(categoryName, money, dateStr, detail)
             findNavController().popBackStack()
+            // TODO ここでDBViewModelのisProcessingをfalseにする
+            //  → Detailでobserveしておき、falseに変更された場合に初期化を再実行する
         }
 
         return view
