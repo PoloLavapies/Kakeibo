@@ -46,10 +46,10 @@ class MainFragment : Fragment() {
             createTable(view, vm.date.value!!.year, vm.date.value!!.monthValue)
         }
 
-        // 表示する月の設定 (起動時のみ実行される)
         val today = LocalDate.now()
+        // 表示する月を当月に設定 (起動時のみ実行される)
         if (vm.date.value == null) {
-            vm.date.value = today
+            vm.date.value = LocalDate.now()
         }
 
         // 右下の追加ボタンをタップした場合、入力される日付のデフォルト値は当日
@@ -116,12 +116,13 @@ class MainFragment : Fragment() {
                         requireContext().packageName
                     )
                     val button: Button = view.findViewById(buttonId)
-                    button.text = getSpentMoneyText(day)
+
+                    button.text = getSpentMoneyText(year, month, day)
                     button.setOnClickListener {
                         val action =
                             MainFragmentDirections.actionMainToDetail(
-                                vm.date.value!!.year,
-                                vm.date.value!!.monthValue,
+                                year,
+                                month,
                                 day
                             )
                         findNavController().navigate(action)
@@ -133,14 +134,12 @@ class MainFragment : Fragment() {
         }
     }
 
-    // TODO DBとの通信回数を減らしたい。その月の全データを取得してViewModelで保持し、必要な日のデータだけ取得するのはどうか?
-    // TODO そもそもViewModelに書くべきか?
-    private fun getSpentMoneyText(day: Int): SpannedString {
+    private fun getSpentMoneyText(year: Int, month: Int, day: Int): SpannedString {
         // カテゴリ
         var spendingTotal = 0
         var incomeTotal = 0
 
-        for (spending in vm.getDataByDate(day)) {
+        for (spending in vm.getDataByDate(year, month, day)) {
             if (spending.categoryId in vm.spendingCategoryIds) {
                 spendingTotal += spending.money
             } else {

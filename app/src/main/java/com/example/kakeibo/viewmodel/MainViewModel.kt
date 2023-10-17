@@ -25,6 +25,10 @@ class MainViewModel(context: Context) : ViewModel() {
     var spendingCategoryIds = mutableListOf<Int>()
     var incomeCategoryIds = mutableListOf<Int>()
 
+    // 当月のデータ
+    var spendingDataMap = mutableMapOf<Int, MutableList<Spending>>()
+    var spendingDataMapInitialized = false
+
     private val dbModel = DatabaseModel(context)
 
     // 前後の月を含む、6週分の日のリストを返す (日曜始まり)
@@ -60,8 +64,25 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    // TODO 事前に当月のデータをメモリに載せておき、該当の日のデータを返す方が軽くなる?
-    fun getDataByDate(day: Int): List<Spending> {
-        return dbModel.getSpendingData(date.value!!.year, date.value!!.monthValue, day)
+    fun getDataByDate(year: Int, month: Int, day: Int): List<Spending> {
+        // spendingDataMapに当月のデータが格納されていない場合は格納
+        if (!spendingDataMapInitialized || date.value?.year != year || date.value?.monthValue != month) {
+            spendingDataMapInitialized = true
+            createSpendingDataMap(year, month)
+        }
+        return spendingDataMap[day] ?: emptyList()
+    }
+
+    private fun createSpendingDataMap(year: Int, month: Int) {
+        val spendingDataList = dbModel.getSpendingDataByMonth(year, month)
+
+        for (spending in spendingDataList) {
+            val day = spending.date.substring(8, 10).toIntOrNull()!!
+            spendingDataMap[day]?.let {
+                it.add(spending)
+            } ?: run {
+                spendingDataMap[day] = mutableListOf(spending)
+            }
+        }
     }
 }

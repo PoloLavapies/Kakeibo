@@ -14,6 +14,9 @@ interface SpendingDao {
     @Query("SELECT * FROM spending WHERE date = :date")
     fun getByDate(date: String): List<Spending>
 
+    @Query("SELECT * FROM spending WHERE date LIKE :year || '-' || SUBSTR('0' || :month , -2 ,2) || '-' || '__'")
+    fun getByMonth(year: Int, month: Int): List<Spending>
+
     @Query("SELECT * FROM spending WHERE id = :id")
     fun getById(id: String): List<Spending>
 

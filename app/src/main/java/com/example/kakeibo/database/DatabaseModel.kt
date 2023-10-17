@@ -24,6 +24,10 @@ class DatabaseModel(context: Context) {
         return db.spendingDao().getByDate(date)
     }
 
+    fun getSpendingDataByMonth(year: Int, month: Int): List<Spending> {
+        return db.spendingDao().getByMonth(year, month)
+    }
+
     fun addSpendingData(spending: Spending) {
         db.spendingDao().insert(spending)
     }
