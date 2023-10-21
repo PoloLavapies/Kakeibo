@@ -27,7 +27,6 @@ class MainViewModel(context: Context) : ViewModel() {
 
     // 当月のデータ
     var spendingDataMap = mutableMapOf<Int, MutableList<Spending>>()
-    var spendingDataMapInitialized = false
 
     private val dbModel = DatabaseModel(context)
 
@@ -64,18 +63,14 @@ class MainViewModel(context: Context) : ViewModel() {
         }
     }
 
-    fun getDataByDate(year: Int, month: Int, day: Int): List<Spending> {
-        // spendingDataMapに当月のデータが格納されていない場合は格納
-        if (!spendingDataMapInitialized || date.value?.year != year || date.value?.monthValue != month) {
-            spendingDataMapInitialized = true
-            createSpendingDataMap(year, month)
-        }
+    fun getDataByDate(day: Int): List<Spending> {
         return spendingDataMap[day] ?: emptyList()
     }
 
-    private fun createSpendingDataMap(year: Int, month: Int) {
+    fun createSpendingDataMap(year: Int, month: Int) {
         val spendingDataList = dbModel.getSpendingDataByMonth(year, month)
 
+        spendingDataMap = mutableMapOf()
         for (spending in spendingDataList) {
             val day = spending.date.substring(8, 10).toIntOrNull()!!
             spendingDataMap[day]?.let {

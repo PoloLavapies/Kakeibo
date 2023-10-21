@@ -42,14 +42,13 @@ class MainFragment : Fragment() {
             setPageTitle(view, vm.date.value!!.year, vm.date.value!!.monthValue)
 
             // 表の生成 (日と金額の表示)
-            vm.initCategoryList()
-            createTable(view, vm.date.value!!.year, vm.date.value!!.monthValue)
+            createTable(view)
         }
 
         val today = LocalDate.now()
         // 表示する月を当月に設定 (起動時のみ実行される)
         if (vm.date.value == null) {
-            vm.date.value = LocalDate.now()
+            vm.date.value = today
         }
 
         // 右下の追加ボタンをタップした場合、入力される日付のデフォルト値は当日
@@ -92,7 +91,14 @@ class MainFragment : Fragment() {
             .show()
     }
 
-    private fun createTable(view: View, year: Int, month: Int) {
+    private fun createTable(view: View) {
+        // TODO ViewModelの実装を知っている前提の実装は良くない気がする
+        vm.initCategoryList()
+        vm.createSpendingDataMap(vm.date.value!!.year, vm.date.value!!.monthValue)
+        fillTable(view, vm.date.value!!.year, vm.date.value!!.monthValue)
+    }
+
+    private fun fillTable(view: View, year: Int, month: Int) {
         // ループ内で処理している週が当月であるかを示すフラグ
         var thisMonthFlag = false
         val dayList: List<Int> = vm.getDayList()
@@ -139,7 +145,7 @@ class MainFragment : Fragment() {
         var spendingTotal = 0
         var incomeTotal = 0
 
-        for (spending in vm.getDataByDate(year, month, day)) {
+        for (spending in vm.getDataByDate(day)) {
             if (spending.categoryId in vm.spendingCategoryIds) {
                 spendingTotal += spending.money
             } else {
