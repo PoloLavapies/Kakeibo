@@ -8,12 +8,6 @@ interface CategoryDao {
     @Query("SELECT * FROM category")
     fun getAll(): List<Category>
 
-    @Query("SELECT * FROM category WHERE is_spending = 'true'")
-    fun getAllSpendingCategory(): List<Category>
-
-    @Query("SELECT * FROM category WHERE is_spending = 'false'")
-    fun getAllIncomeCategory(): List<Category>
-
     @Query("SELECT * FROM category WHERE id = :id")
     fun getCategory(id: Int): Category
 
@@ -23,6 +17,6 @@ interface CategoryDao {
     @Update
     fun update(category: Category)
 
-    @Delete
-    fun delete(category: Category)
+    @Query("DELETE FROM category WHERE id = :id")
+    suspend fun deleteById(id: Int)
 }

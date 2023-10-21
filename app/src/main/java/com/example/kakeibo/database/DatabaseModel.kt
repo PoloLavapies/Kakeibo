@@ -19,6 +19,14 @@ class DatabaseModel(context: Context) {
         return db.categoryDao().getAll()
     }
 
+    fun addCategory(category: Category) {
+        return db.categoryDao().insert(category)
+    }
+
+    suspend fun deleteCategory(id: Int) {
+        return db.categoryDao().deleteById(id)
+    }
+
     fun getSpendingData(year: Int, month: Int, day: Int): List<Spending> {
         val date = LocalDate.of(year, month, day).format(DateTimeFormatter.ISO_DATE)
         return db.spendingDao().getByDate(date)
