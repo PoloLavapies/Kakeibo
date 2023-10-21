@@ -35,8 +35,10 @@ class MainFragment : Fragment() {
         val binding: FragmentMainBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
         binding.vm = vm
-        val view: View = binding.root
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         vm.date.observe(viewLifecycleOwner) {
             // 年と月の表示
             setPageTitle(view, vm.date.value!!.year, vm.date.value!!.monthValue)
@@ -62,8 +64,6 @@ class MainFragment : Fragment() {
                 )
             findNavController().navigate(action)
         }
-
-        return view
     }
 
     private fun setPageTitle(view: View, year: Int, month: Int) {

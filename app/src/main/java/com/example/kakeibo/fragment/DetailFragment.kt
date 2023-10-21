@@ -30,8 +30,10 @@ class DetailFragment : Fragment() {
         val binding: FragmentDetailBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_detail, container, false)
         binding.vm = vm
-        val view: View = binding.root
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         vm.year = args.year
         vm.month = args.month
         vm.day = args.day
@@ -52,8 +54,6 @@ class DetailFragment : Fragment() {
             val action = DetailFragmentDirections.actionDetailToAddData(vm.year, vm.month, vm.day)
             findNavController().navigate(action)
         }
-
-        return view
     }
 
     suspend fun deleteSpendingData(id: Int) {

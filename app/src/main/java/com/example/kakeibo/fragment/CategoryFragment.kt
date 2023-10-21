@@ -26,8 +26,10 @@ class CategoryFragment : Fragment() {
         val binding: FragmentCategoryBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_category, container, false)
         binding.vm = vm
-        val view: View = binding.root
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         vm.init()
 
         // 収入カテゴリーの一覧表示
@@ -73,8 +75,6 @@ class CategoryFragment : Fragment() {
         )
 
         // TODO 追加についても実装
-
-        return view
     }
 
     suspend fun deleteCategory(id: Int) {

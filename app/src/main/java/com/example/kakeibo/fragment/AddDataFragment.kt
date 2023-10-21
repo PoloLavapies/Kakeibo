@@ -31,8 +31,10 @@ class AddDataFragment : Fragment() {
         val binding: FragmentAddDataBinding =
             DataBindingUtil.inflate(inflater, R.layout.fragment_add_data, container, false)
         binding.vm = vm
-        val view: View = binding.root
+        return binding.root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // 日付
         vm.year = args.year
         vm.month = args.month
@@ -103,8 +105,6 @@ class AddDataFragment : Fragment() {
             // TODO ここでDBViewModelのisProcessingをfalseにする
             //  → Detailでobserveしておき、falseに変更された場合に初期化を再実行する
         }
-
-        return view
     }
 
 
