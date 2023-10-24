@@ -4,12 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
+import android.widget.Button
+import android.widget.EditText
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.kakeibo.R
-import com.example.kakeibo.adapter.CategoryViewAdapter
+import com.example.kakeibo.adapter.CategoryRecyclerViewAdapter
 import com.example.kakeibo.databinding.FragmentCategoryBinding
 import com.example.kakeibo.viewmodel.CategoryViewModel
 
@@ -33,48 +36,42 @@ class CategoryFragment : Fragment() {
         vm.init()
 
         // 収入カテゴリーの一覧表示
-        val incomeListView: ListView = view.findViewById(R.id.income_list)
-        incomeListView.adapter = CategoryViewAdapter(
-            requireContext(),
-            this,
-            vm.incomeCategories,
-            R.layout.fragment_category_row,
-            arrayOf("id", "name"),
-            intArrayOf(R.id.category_name)
-        )
+        val incomeRecyclerView: RecyclerView = view.findViewById(R.id.incomeRecyclerView)
+        incomeRecyclerView.adapter =
+            CategoryRecyclerViewAdapter(context, this, vm.incomeCategoryList)
+        incomeRecyclerView.layoutManager = LinearLayoutManager(view.context)
 
-        // TODO 以下のコードが動くようにする
         // 収入カテゴリーの追加ボタン押下時の処理
-        /*val incomeCategoryAddButton = view.findViewById<Button>(R.id.income_category_add_button)
+        val incomeCategoryAddButton = view.findViewById<Button>(R.id.incomeCategoryAddButton)
         incomeCategoryAddButton.setOnClickListener {
-            val incomeCategoryToAdd =
-                view.findViewById<EditText>(R.id.income_category_add).text.toString()
+            val editText: EditText = view.findViewById(R.id.incomeCategoryAdd)
+            val incomeCategoryToAdd = editText.text.toString()
+            // TODO suspendにする
             vm.addCategory(false, incomeCategoryToAdd)
-            vm.init()
-            incomeListView.adapter = CategoryViewAdapter(
-                requireContext(),
-                this,
-                vm.incomeCategories,
-                R.layout.fragment_category_row,
-                arrayOf("id", "name"),
-                intArrayOf(R.id.category_name)
+            // TODO 以下の処理はViewModelで行う方が適切かもしれない
+            (incomeRecyclerView.adapter as CategoryRecyclerViewAdapter).notifyItemChanged(
+                vm.incomeCategoryList.size - 1
             )
-            // 以下でエラーが発生する
-            (incomeListView.adapter as CategoryViewAdapter).notifyDataSetChanged()
-        }*/
+            editText.editableText.clear()
+        }
 
+        // 支出カテゴリーの一覧表示
+        val spendingRecyclerView: RecyclerView = view.findViewById(R.id.spendingRecyclerView)
+        spendingRecyclerView.adapter =
+            CategoryRecyclerViewAdapter(context, this, vm.spendingCategoryList)
+        spendingRecyclerView.layoutManager = LinearLayoutManager(view.context)
 
-        val spendingListView: ListView = view.findViewById(R.id.spending_list)
-        spendingListView.adapter = CategoryViewAdapter(
-            requireContext(),
-            this,
-            vm.spendingCategories,
-            R.layout.fragment_category_row,
-            arrayOf("id", "name"),
-            intArrayOf(R.id.category_name)
-        )
-
-        // TODO 追加についても実装
+        // 収入カテゴリーの追加ボタン押下時の処理
+        val spendingCategoryAddButton = view.findViewById<Button>(R.id.spendingCategoryAddButton)
+        spendingCategoryAddButton.setOnClickListener {
+            val editText: EditText = view.findViewById(R.id.spendingCategoryAdd)
+            val spendingCategoryToAdd = editText.text.toString()
+            vm.addCategory(true, spendingCategoryToAdd)
+            (spendingRecyclerView.adapter as CategoryRecyclerViewAdapter).notifyItemChanged(
+                vm.spendingCategoryList.size - 1
+            )
+            editText.editableText.clear()
+        }
     }
 
     suspend fun deleteCategory(id: Int) {

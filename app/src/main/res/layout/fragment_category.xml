@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/income"
+            android:id="@+id/incomeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="収入"
@@ -25,39 +25,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ListView
-            android:id="@+id/income_list"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/incomeRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/income" />
+            app:layout_constraintTop_toBottomOf="@id/incomeText" />
 
-        <!-- TODO ロジックを修正し、カテゴリの追加ができるようにする -->
-        <!--<EditText
-            android:id="@+id/income_category_add"
+        <EditText
+            android:id="@+id/incomeCategoryAdd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/income_category_add_button"
-            app:layout_constraintTop_toBottomOf="@id/income_list"
+            app:layout_constraintEnd_toStartOf="@id/incomeCategoryAddButton"
+            app:layout_constraintTop_toBottomOf="@id/incomeRecyclerView"
             app:layout_constraintHorizontal_weight="5" />
 
         <Button
-            android:id="@+id/income_category_add_button"
+            android:id="@+id/incomeCategoryAddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="0dp"
             android:layout_marginRight="5dp"
             android:text="追加"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/income_category_add"
-            app:layout_constraintHorizontal_weight="1" />-->
+            app:layout_constraintTop_toTopOf="@id/incomeCategoryAdd"
+            app:layout_constraintHorizontal_weight="1" />
 
         <TextView
-            android:id="@+id/spending"
+            android:id="@+id/spendingText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="支出"
@@ -65,37 +64,36 @@
             android:layout_margin="5dp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/income_list" />
-        <!--app:layout_constraintTop_toBottomOf="@id/income_category_add" /> -->
+            app:layout_constraintTop_toBottomOf="@id/incomeCategoryAddButton" />
 
-        <ListView
-            android:id="@+id/spending_list"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/spendingRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spending" />
+            app:layout_constraintTop_toBottomOf="@id/spendingText" />
 
-        <!--<EditText
-            android:id="@+id/spending_category_add"
+        <EditText
+            android:id="@+id/spendingCategoryAdd"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:inputType="text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/spending_category_add_button"
-            app:layout_constraintTop_toBottomOf="@id/spending_list"
+            app:layout_constraintEnd_toStartOf="@id/spendingCategoryAddButton"
+            app:layout_constraintTop_toBottomOf="@id/spendingRecyclerView"
             app:layout_constraintHorizontal_weight="5" />
 
         <Button
-            android:id="@+id/spending_category_add_button"
+            android:id="@+id/spendingCategoryAddButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="0dp"
             android:layout_marginRight="5dp"
             android:text="追加"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/spending_category_add"
-            app:layout_constraintHorizontal_weight="1" />-->
+            app:layout_constraintTop_toTopOf="@id/spendingCategoryAdd"
+            app:layout_constraintHorizontal_weight="1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

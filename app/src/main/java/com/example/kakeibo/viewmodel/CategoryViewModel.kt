@@ -17,31 +17,27 @@ class CategoryViewModel(context: Context) : ViewModel() {
 
     private val dbModel = DatabaseModel(context)
 
-    var incomeCategories: MutableList<MutableMap<String, Any>> = mutableListOf()
-    var spendingCategories: MutableList<MutableMap<String, Any>> = mutableListOf()
+    var incomeCategoryList: MutableList<Category> = mutableListOf()
+    var spendingCategoryList: MutableList<Category> = mutableListOf()
 
     fun init() {
         for (category in dbModel.getAllCategories()) {
             if (category.isSpending) {
-                spendingCategories.add(
-                    mutableMapOf(
-                        "id" to category.id,
-                        "name" to category.name
-                    )
-                )
+                spendingCategoryList.add(category)
             } else {
-                incomeCategories.add(
-                    mutableMapOf(
-                        "id" to category.id,
-                        "name" to category.name
-                    )
-                )
+                incomeCategoryList.add(category)
             }
         }
     }
 
     fun addCategory(isSpending: Boolean, name: String) {
-        dbModel.addCategory(Category(0, isSpending, name))
+        val categoryToAdd = Category(0, isSpending, name)
+        dbModel.addCategory(categoryToAdd)
+        if (isSpending) {
+            spendingCategoryList.add(categoryToAdd)
+        } else {
+            incomeCategoryList.add(categoryToAdd)
+        }
     }
 
     suspend fun deleteCategory(id: Int) {
